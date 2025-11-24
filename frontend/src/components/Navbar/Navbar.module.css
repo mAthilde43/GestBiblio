@@ -1,0 +1,50 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 3rem;
+  /* background-color: #ffffff; */
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+}
+
+.logo img {
+  height: 90px;
+  margin: -10px;
+}
+
+.navLinks {
+  display: flex;
+  list-style: none;
+  gap: 2.5rem;
+  align-items: center;
+  font-size: 18px;
+  margin: 10px 0 10px 0;
+}
+
+.navLinks li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.navLinks li a:hover {
+  color: #9e8c78;
+}
+
+.accountContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logoutButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  font-size: 1.2rem;
+  margin: 1rem;
+}
+.logoutButton:hover {
+  color: #9e8c78;
+}

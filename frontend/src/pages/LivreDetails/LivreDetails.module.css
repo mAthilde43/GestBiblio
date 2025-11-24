@@ -1,0 +1,81 @@
+.page {
+  min-height: 100vh;
+  padding: 40px;
+  color: #3a2c23;
+  font-family: "Georgia", serif;
+}
+
+.backBtn {
+  background-color: #bba892;
+  color: white;
+  padding: 10px 22px;
+  border-radius: 25px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-bottom: 40px;
+}
+
+.backBtn:hover {
+  background-color: #a8977f;
+}
+
+.title {
+  text-align: center;
+  font-size: 40px;
+  margin-bottom: 50px;
+  color: #9e8c78;
+}
+
+.contentWrapper {
+  display: flex;
+  gap: 80px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.bookImage {
+  width: 300px;
+  height: 440px;
+  object-fit: cover;
+  border-radius: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.infoContainer {
+  max-width: 450px;
+  font-size: 1.1rem;
+  margin: 5px 0;
+}
+
+.infoContainer p {
+  margin: 16px 0;
+}
+
+.infoContainer strong {
+  font-weight: bold;
+  color: #3a2c23;
+  font-size: 1.1rem;
+}
+
+.buttonsRow {
+  margin-top: 40px;
+  display: flex;
+  gap: 40px;
+}
+
+.actionBtn {
+  background-color: #d1c1ad;
+  padding: 12px 26px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #3a2c23;
+  transition: 0.2s;
+}
+
+.actionBtn:hover {
+  background-color: #bba892;
+}

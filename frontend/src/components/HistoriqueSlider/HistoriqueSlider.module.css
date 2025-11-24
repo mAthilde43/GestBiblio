@@ -1,0 +1,60 @@
+.wrapper {
+  margin-top: 40px;
+  padding: 0 20px;
+}
+
+.title {
+  font-size: 28px;
+  color: #9e8c78;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.slider {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scroll-behavior: smooth;
+}
+
+.slider::-webkit-scrollbar {
+  height: 8px;
+}
+
+.slider::-webkit-scrollbar-thumb {
+  background: #c1b4a2;
+  border-radius: 10px;
+}
+
+.card {
+  min-width: 180px;
+  background: white;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.cover {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.bookTitle {
+  font-weight: bold;
+  margin: 10px 0;
+  color: #4d453f;
+}
+
+.dates {
+  color: #6a5f55;
+  font-size: 14px;
+}
+
+.empty {
+  color: #6a5f55;
+  margin-top: 20px;
+}

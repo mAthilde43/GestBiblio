@@ -1,0 +1,9 @@
+.suggestionContainer {
+  padding: 24px 100px;
+}
+
+.suggestionTitle {
+  font-size: 30px;
+  margin-bottom: 20px;
+  color: #9e8c78;
+}

@@ -1,0 +1,27 @@
+.catalogueContainer {
+  padding: 24px 100px;
+}
+
+.catalogueTitle {
+  text-align: center;
+  font-size: 40px;
+  margin-bottom: 50px;
+  color: #9e8c78;
+}
+
+.themeTitle {
+  font-size: 30px;
+  margin-bottom: 20px;
+  color: #9e8c78;
+}
+
+.themeSection {
+  margin-bottom: 60px;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 40px;
+  justify-items: center;
+}

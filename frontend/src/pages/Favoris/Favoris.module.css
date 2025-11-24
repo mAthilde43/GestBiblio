@@ -1,0 +1,17 @@
+.favorisContainer {
+  padding: 24px 100px;
+}
+
+.favorisTitle {
+  text-align: center;
+  font-size: 40px;
+  margin-bottom: 50px;
+  color: #9e8c78;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 40px;
+  justify-items: center;
+}
