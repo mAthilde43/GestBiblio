@@ -11,6 +11,7 @@ import Catalogue from "./pages/Catalogue/Catalogue";
 import LivreDetails from "./pages/LivreDetails/LivreDetails";
 import Favoris from "./pages/Favoris/Favoris";
 import Emprunter from "./pages/Emprunter/Emprunter";
+import { AnimatePresence } from "framer-motion";
 
 function App() {
   const location = useLocation();
@@ -22,18 +23,21 @@ function App() {
   return (
     <div className="App">
       {!hideNavbar && <Navbar />}
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/auth/register" element={<RegisterPage />} />
-        <Route path="/auth/login" element={<LoginPage />} />
-        <Route path="/users" element={<Utilisateur />} />
-        <Route path="/account" element={<Account />} />
-        <Route path="/add-book" element={<AddBook />} />
-        <Route path="/catalogue" element={<Catalogue />} />
-        <Route path="/livre/:id" element={<LivreDetails />} />
-        <Route path="/favoris" element={<Favoris />} />
-        <Route path="/emprunter" element={<Emprunter />} />
-      </Routes>
+
+      <AnimatePresence mode="wait">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/auth/register" element={<RegisterPage />} />
+          <Route path="/auth/login" element={<LoginPage />} />
+          <Route path="/users" element={<Utilisateur />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/add-book" element={<AddBook />} />
+          <Route path="/catalogue" element={<Catalogue />} />
+          <Route path="/livre/:id" element={<LivreDetails />} />
+          <Route path="/favoris" element={<Favoris />} />
+          <Route path="/emprunter" element={<Emprunter />} />
+        </Routes>
+      </AnimatePresence>
     </div>
   );
 }
