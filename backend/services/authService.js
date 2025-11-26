@@ -1,7 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const userRepository = require("../repositories/userRepository");
-const { v4: uuidv4 } = require("uuid"); // Pour générer un identifiant unique
 require("dotenv").config();
 
 const register = async (data) => {
@@ -10,13 +9,10 @@ const register = async (data) => {
 
   const hash = await bcrypt.hash(data.password, 10);
 
-  const card_number = uuidv4();
-
   return userRepository.createUser({
     ...data,
     password: hash,
     id_role: 1,
-    card_number,
   });
 };
 

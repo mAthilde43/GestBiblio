@@ -18,11 +18,14 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:3000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, id_role: 1 }), //role par défaut : utilisateur
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/auth/register`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...formData, id_role: 1 }), //role par défaut : utilisateur
+        }
+      );
       const data = await response.json();
       console.log(data);
       alert("Inscription réussie !");

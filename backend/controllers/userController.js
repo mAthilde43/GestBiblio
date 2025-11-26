@@ -21,10 +21,20 @@ const getAllUsers = async (req, res) => {
   try {
     const users = await userRepository.findAllUsers(); // appelle directement le repo
     const formattedUsers = users.map((user) => {
-      const { password, ...userData } = user.toJSON();
+      const { password, Emprunts, ...userData } = user.toJSON();
+
+      const emprunts =
+        Emprunts?.map((e) => ({
+          titre: e.Livre.titre || "Inconnu",
+          date_emprunt: e.date_emprunt,
+          date_retour_prevu: e.date_retour_prevu,
+          date_retour_effectif: e.date_retour_effectif,
+        })) || [];
+
       return {
         ...userData,
-        livre: user.Emprunts?.[0]?.Livre?.titre || "Aucun",
+        emprunts,
+        // livre: user.Emprunts?.[0]?.Livre?.titre || "Aucun",
       };
     });
     res.json(formattedUsers);

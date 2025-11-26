@@ -4,14 +4,17 @@ const sequelize = require("../config/db");
 const Emprunt = sequelize.define(
   "Emprunt",
   {
+    id_emprunt: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     id_user: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
       allowNull: false,
     },
     id_livre: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
       allowNull: false,
     },
     date_emprunt: {

@@ -10,10 +10,10 @@ const findById = (id_user) => User.findByPk(id_user, { include: Role });
 const findAllUsers = async () => {
   return User.findAll({
     include: [
-      Role,
+      { model: Role },
       {
         model: Emprunt,
-        include: [Livre],
+        include: [{ model: Livre }],
       },
     ],
   });

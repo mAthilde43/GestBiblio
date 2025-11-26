@@ -11,8 +11,7 @@ const User = sequelize.define("User", {
   },
   card_number: {
     type: DataTypes.STRING,
-    // unique: true,
-    allowNull: false,
+    allowNull: true,
   },
   nom: {
     type: DataTypes.STRING,
@@ -44,6 +43,13 @@ const User = sequelize.define("User", {
       key: "id_role",
     },
   },
+});
+
+User.afterCreate(async (user, options) => {
+  if (!user.card_number) {
+    user.card_number = user.id_user.toString();
+    await user.save({ hooks: false });
+  }
 });
 
 module.exports = User;

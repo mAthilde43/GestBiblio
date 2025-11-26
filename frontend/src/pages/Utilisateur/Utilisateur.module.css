@@ -77,3 +77,95 @@
   border-radius: 25px;
   font-size: 15px;
 }
+
+.innerTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 5px;
+}
+
+.innerTable th,
+.innerTable td {
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.innerTable th {
+  background-color: #e0d4c2;
+}
+
+.empruntList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.empruntItem {
+  background-color: #f5f0e8;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.userTableContainer {
+  display: flex;
+  gap: 20px;
+}
+
+.modalContent {
+  position: relative;
+}
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: flex-end; /* apparait à droite */
+  z-index: 1000;
+}
+
+.modal {
+  background-color: #fff;
+  width: 400px;
+  max-width: 100%;
+  height: 100%;
+  padding: 20px;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: -3px 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #9e8c78;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.section {
+  margin-top: 20px;
+}
+
+.empruntList {
+  list-style: none;
+  padding-left: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.empruntItem {
+  padding: 8px;
+  border-bottom: 1px solid #ccc;
+}
