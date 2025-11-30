@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./HistoriqueSlider.module.css";
+import CardHistorique from "../CardHistorique/CardHistorique";
 
 const HistoriqueSlider = ({ historique }) => {
   if (!historique.length)
@@ -11,25 +12,7 @@ const HistoriqueSlider = ({ historique }) => {
 
       <div className={styles.slider}>
         {historique.map((item) => (
-          <div className={styles.card} key={item.id_emprunt}>
-            <img
-              src={
-                item.Livre?.image_url
-                  ? `${process.env.REACT_APP_API_URL}${item.Livre.image_url}`
-                  : "/placeholder.jpg"
-              }
-              alt={item.Livre?.titre}
-              className={styles.cover}
-            />
-
-            <p className={styles.bookTitle}>{item.Livre?.titre}</p>
-
-            <p className={styles.dates}>
-              Emprunté : {new Date(item.date_emprunt).toLocaleDateString()}
-              <br />
-              Rendu : {new Date(item.date_retour_effectif).toLocaleDateString()}
-            </p>
-          </div>
+          <CardHistorique key={item.id_emprunt} emprunt={item} />
         ))}
       </div>
     </div>

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import classes from "./AddBook.module.css";
+import { useNavigate } from "react-router-dom";
 
 const AddBook = () => {
   const [themes, setThemes] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const navigate = useNavigate();
   const [auteursExistants, setAuteursExistants] = useState([]);
   const [formData, setFormData] = useState({
     titre: "",
@@ -145,23 +148,43 @@ const AddBook = () => {
             />
           </label>
 
-          <label>
+          <label style={{ position: "relative" }}>
             Auteur :
             <input
               type="text"
               name="auteur"
               value={formData.auteur}
-              onChange={handleChange}
+              onChange={(e) => {
+                setFormData({ ...formData, auteur: e.target.value });
+                setShowDropdown(true); // afficher le dropdown dès qu'on tape
+              }}
+              onFocus={() => setShowDropdown(true)}
+              onBlur={() => setTimeout(() => setShowDropdown(false), 100)} // délai pour permettre le clic sur option
               placeholder="Insérer le nom de l’auteur"
-              list="auteurs-list"
+              autoComplete="off"
               required
             />
-            <datalist id="auteurs-list">
-              {Array.isArray(auteursExistants) &&
-                auteursExistants.map((auteur) => (
-                  <option key={auteur.id_auteur} value={`${auteur.nom}`} />
-                ))}
-            </datalist>
+            {showDropdown && (
+              <ul className={classes.dropdown}>
+                {auteursExistants
+                  .filter((auteur) =>
+                    auteur.nom
+                      .toLowerCase()
+                      .includes(formData.auteur.toLowerCase())
+                  )
+                  .map((auteur) => (
+                    <li
+                      key={auteur.id_auteur}
+                      onClick={() => {
+                        setFormData({ ...formData, auteur: auteur.nom });
+                        setShowDropdown(false);
+                      }}
+                    >
+                      {auteur.nom}
+                    </li>
+                  ))}
+              </ul>
+            )}
           </label>
 
           <label>
@@ -203,8 +226,11 @@ const AddBook = () => {
 
           {/* Boutons */}
           <div className={classes.buttonContainer}>
-            <button type="button" onClick={handleCancel}>
+            <button type="button" onClick={() => navigate("/")}>
               Annuler
+            </button>
+            <button type="button" onClick={handleCancel}>
+              Réinitialiser
             </button>
             <button type="submit">Ajouter</button>
           </div>

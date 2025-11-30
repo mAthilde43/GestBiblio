@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import classes from "./SearchBar.module.css";
 import { AuthContext } from "../../contexts/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 
 const SearchBar = () => {
   const { user } = useContext(AuthContext);
@@ -82,7 +82,7 @@ const SearchBar = () => {
 
       {/* Bouton reset à droite */}
       <button className={classes.resetButton} onClick={handleReset}>
-        <FontAwesomeIcon icon={faTimesCircle} />
+        <FontAwesomeIcon icon={faRotateRight} />
       </button>
     </div>
   );

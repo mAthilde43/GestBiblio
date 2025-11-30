@@ -133,3 +133,30 @@ textarea {
 .buttonContainer button[type="submit"]:hover {
   background-color: #a2886f;
 }
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #fff;
+  border: 1px solid #c3b6a3;
+  border-radius: 6px;
+  margin-top: 5px;
+  z-index: 10;
+  list-style: none;
+  padding: 0;
+  color: #333;
+  font-weight: 100;
+}
+
+.dropdown li {
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.dropdown li:hover {
+  background-color: #f3ece4;
+}

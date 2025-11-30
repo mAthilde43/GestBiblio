@@ -4,6 +4,8 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { NextArrow, PrevArrow } from "../../components/CustomArrow/CustomArrow";
 import styles from "./Emprunter.module.css";
 import { useNavigate } from "react-router-dom";
+import CardEmprunt from "../../components/CardEmprunt/CardEmprunt";
+import CardHistorique from "../../components/CardHistorique/CardHistorique";
 
 const Emprunter = () => {
   const { token } = useContext(AuthContext);
@@ -81,16 +83,17 @@ const Emprunter = () => {
   // -------------------------------------------------------------
   const sliderSettings = {
     dots: false,
-    infinite: false,
-    speed: 400,
-    slidesToShow: 3,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
     slidesToScroll: 1,
     arrows: true,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 2 } },
-      { breakpoint: 600, settings: { slidesToShow: 1 } },
+      { breakpoint: 1024, settings: { slidesToShow: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 2 } },
+      { breakpoint: 480, settings: { slidesToShow: 1 } },
     ],
   };
 
@@ -125,43 +128,13 @@ const Emprunter = () => {
         <Slider {...sliderSettings} className={styles.slider}>
           {empruntsEnCours.map((e) => {
             const livre = e.Livre || e.livre || {};
-            const dateEmprunt = new Date(e.date_emprunt);
-            const dateRetourPrevu = new Date(e.date_retour_prevu);
-
             return (
-              <div key={livre.id_livre} className={styles.card}>
-                <img
-                  src={
-                    livre.image_url
-                      ? `${process.env.REACT_APP_API_URL}${livre.image_url}`
-                      : "/placeholder.jpg"
-                  }
-                  alt={livre.titre}
-                  className={styles.img}
-                />
-
-                <h3>{livre.titre}</h3>
-                <p>
-                  {livre.Auteurs?.map((a) => `${a.prenom} ${a.nom}`).join(", ")}
-                </p>
-
-                <div className={styles.dates}>
-                  <p>📅 Emprunté le : {dateEmprunt.toLocaleDateString()}</p>
-                  <p>
-                    📕 Retour prévu : {dateRetourPrevu.toLocaleDateString()}
-                  </p>
-
-                  <button
-                    className={styles.rendreBtn}
-                    onClick={() => {
-                      if (window.confirm("Confirmer le rendu ?"))
-                        handleRendre(livre.id_livre);
-                    }}
-                  >
-                    Rendre le livre
-                  </button>
-                </div>
-              </div>
+              <CardEmprunt
+                key={livre.id_livre}
+                livre={livre}
+                emprunt={e}
+                onRendre={handleRendre}
+              />
             );
           })}
         </Slider>
@@ -178,31 +151,8 @@ const Emprunter = () => {
         <Slider {...sliderSettings} className={styles.slider}>
           {historique.map((e) => {
             const livre = e.Livre || e.livre || {};
-            const dateEmprunt = new Date(e.date_emprunt);
-            const dateRetour = new Date(e.date_retour_effectif);
-
             return (
-              <div key={livre.id_livre + "-hist"} className={styles.card}>
-                <img
-                  src={
-                    livre.image_url
-                      ? `${process.env.REACT_APP_API_URL}${livre.image_url}`
-                      : "/placeholder.jpg"
-                  }
-                  alt={livre.titre}
-                  className={styles.img}
-                />
-
-                <h3>{livre.titre}</h3>
-                <p>
-                  {livre.Auteurs?.map((a) => `${a.prenom} ${a.nom}`).join(", ")}
-                </p>
-
-                <div className={styles.dates}>
-                  <p>📅 Emprunté le : {dateEmprunt.toLocaleDateString()}</p>
-                  <p>✔️ Rendu le : {dateRetour.toLocaleDateString()}</p>
-                </div>
-              </div>
+              <CardHistorique key={e.id_emprunt} livre={livre} emprunt={e} />
             );
           })}
         </Slider>
