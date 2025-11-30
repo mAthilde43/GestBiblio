@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import classes from "./Card.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as farHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fasHeart } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -98,9 +98,18 @@ const Card = ({ livre, onDelete, userRole, favorisList, onFavoriChange }) => {
 
         <div className={classes.actions}>
           {userRole === 2 && (
-            <button className={classes.iconBtn} onClick={handleDelete}>
-              <FontAwesomeIcon icon={faTrash} />
-            </button>
+            <>
+              <Link
+                to={`/edit-book/${livre.id_livre}`}
+                className={classes.iconBtn}
+              >
+                <FontAwesomeIcon icon={faEdit} />
+              </Link>
+
+              <button className={classes.iconBtn} onClick={handleDelete}>
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+            </>
           )}
 
           <button className={classes.iconBtn} onClick={toggleFavori}>

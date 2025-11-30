@@ -1,5 +1,6 @@
 const livreService = require("../services/livreService");
 const { findOrCreateAuteur } = require("../services/auteurService"); // Import du service Auteur
+const { Livre, Auteur, Theme } = require("../models");
 
 const getAll = async (req, res) => {
   try {
@@ -57,13 +58,34 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const updatedLivre = await livreService.updateLivre(
-      req.params.id,
-      req.body
-    );
-    res.json(updatedLivre);
+    const { titre, date_parution, description, id_theme, auteur } = req.body;
+    const image_url = req.file ? `/uploads/${req.file.filename}` : undefined;
+
+    const updatedLivre = await livreService.updateLivre(req.params.id, {
+      titre,
+      date_parution,
+      description,
+      image_url,
+    });
+
+    // Mettre à jour le thème si présent
+    if (id_theme) {
+      await updatedLivre.setThemes([id_theme]);
+    }
+
+    // Mettre à jour l'auteur si présent
+    if (auteur) {
+      const auteurObj = await findOrCreateAuteur(auteur);
+      await updatedLivre.setAuteurs([auteurObj.id_auteur]);
+    }
+
+    // Recharger les relations pour retourner l'objet complet
+    const livreFinal = await Livre.findByPk(req.params.id, {
+      include: [Auteur, Theme],
+    });
+    res.json(livreFinal);
   } catch (err) {
-    console.error(err);
+    console.error("Erreur updateLivre:", err);
     res.status(500).json({ message: "Erreur serveur", error: err.message });
   }
 };

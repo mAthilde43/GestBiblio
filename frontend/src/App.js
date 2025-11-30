@@ -36,6 +36,7 @@ function App() {
           <Route path="/livre/:id" element={<LivreDetails />} />
           <Route path="/favoris" element={<Favoris />} />
           <Route path="/emprunter" element={<Emprunter />} />
+          <Route path="/edit-book/:id" element={<AddBook editMode={true} />} />
         </Routes>
       </AnimatePresence>
     </div>

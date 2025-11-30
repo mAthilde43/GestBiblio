@@ -29,7 +29,13 @@ router.post(
   livreController.create
 );
 
-router.put("/:id", authMiddleware, isAdmin, livreController.update);
+router.put(
+  "/:id",
+  authMiddleware,
+  isAdmin,
+  upload.single("image"),
+  livreController.update
+);
 router.delete("/:id", authMiddleware, isAdmin, livreController.remove);
 
 module.exports = router;
