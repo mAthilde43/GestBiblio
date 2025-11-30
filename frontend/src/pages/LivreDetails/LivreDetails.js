@@ -182,7 +182,7 @@ const LivreDetails = () => {
         <div className={styles.infoContainer}>
           <p>
             <strong>Auteur :</strong>{" "}
-            {livre.Auteurs?.map((a) => `${a.prenom} ${a.nom}`).join(", ")}
+            {livre.Auteurs?.map((a) => `${a.nom}`).join(", ")}
           </p>
 
           <p>
@@ -220,6 +220,13 @@ const LivreDetails = () => {
             ) : empruntGlobal ? (
               <button className={styles.actionBtn} disabled>
                 Livre indisponible
+              </button>
+            ) : !token ? (
+              <button
+                className={styles.connectBtn}
+                onClick={() => navigate(`/auth/login?redirect=/livre/${id}`)}
+              >
+                Se connecter pour emprunter
               </button>
             ) : (
               <button className={styles.actionBtn} onClick={handleEmprunter}>

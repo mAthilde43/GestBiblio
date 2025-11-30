@@ -1,13 +1,17 @@
 import React, { useState, useContext } from "react";
 import classes from "./LoginPage.module.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../../../contexts/AuthContext";
 import AnimatedPage from "../../AnimatePage.js/AnimatePage";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useContext(AuthContext); // <-- récupère login du contexte
+
+  const redirectUrl =
+    new URLSearchParams(location.search).get("redirect") || "/";
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -31,7 +35,7 @@ const LoginPage = () => {
       login(data.user, data.token);
 
       alert("Connexion réussie !");
-      navigate("/"); // redirection vers home
+      navigate(redirectUrl); // redirection vers home
     } catch (err) {
       console.error(err);
       alert("Erreur lors de la connexion.");

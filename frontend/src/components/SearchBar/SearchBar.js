@@ -2,47 +2,69 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import classes from "./SearchBar.module.css";
 import { AuthContext } from "../../contexts/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
 const SearchBar = () => {
   const { user } = useContext(AuthContext);
-  const [themes, setThemes] = useState([]); // Stocke les thèmes
+  const [themes, setThemes] = useState([]);
+
+  // Nouveaux états pour chaque champ
+  const [search, setSearch] = useState("");
+  const [author, setAuthor] = useState("");
+  const [theme, setTheme] = useState("");
+  const [date, setDate] = useState("");
 
   useEffect(() => {
     const fetchThemes = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/themes`); // Appel à ton backend
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/themes`);
         if (!response.ok) throw new Error("Erreur lors du fetch des thèmes");
         const data = await response.json();
-        setThemes(data); // Stocke les thèmes dans l'état
+        setThemes(data);
       } catch (err) {
         console.error("Erreur lors du chargement des thèmes :", err);
       }
     };
-
     fetchThemes();
   }, []);
 
+  const handleReset = () => {
+    setSearch("");
+    setAuthor("");
+    setTheme("");
+    setDate("");
+  };
+
   return (
     <div className={classes.searchContainer}>
-      {/* Bouton Ajouter un livre visible seulement pour id_role = 2 */}
       {user && user.id_role === 2 && (
         <Link to="/add-book" className={classes.addButton}>
           + Ajouter un livre
         </Link>
       )}
 
-      {/* Barre de recherche */}
       <input
         type="text"
         placeholder="Rechercher un livre..."
         className={classes.input}
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
       />
 
-      {/* Auteur */}
-      <input type="text" placeholder="Auteur" className={classes.input} />
+      <input
+        type="text"
+        placeholder="Auteur"
+        className={classes.input}
+        value={author}
+        onChange={(e) => setAuthor(e.target.value)}
+      />
 
-      {/* Thème dynamique */}
-      <select className={classes.select}>
+      <select
+        className={classes.select}
+        value={theme}
+        onChange={(e) => setTheme(e.target.value)}
+      >
         <option value="">Thème</option>
         {themes.map((theme) => (
           <option key={theme.id_theme} value={theme.nom}>
@@ -51,8 +73,17 @@ const SearchBar = () => {
         ))}
       </select>
 
-      {/* Disponibilité */}
-      <input type="date" className={classes.input} />
+      <input
+        type="date"
+        className={classes.input}
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+      />
+
+      {/* Bouton reset à droite */}
+      <button className={classes.resetButton} onClick={handleReset}>
+        <FontAwesomeIcon icon={faTimesCircle} />
+      </button>
     </div>
   );
 };
