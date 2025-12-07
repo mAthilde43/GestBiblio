@@ -12,8 +12,13 @@ const RegisterPage = () => {
     password: "",
   });
 
+  const [emailError, setEmailError] = useState("");
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === "email") {
+      setEmailError("");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -28,8 +33,18 @@ const RegisterPage = () => {
         }
       );
       const data = await response.json();
-      console.log(data);
-      alert("Inscription réussie !");
+
+      if (!response.ok) {
+        // Vérifie si le serveur renvoie un message indiquant que l'email est déjà utilisé
+        if (data.message && data.message.toLowerCase().includes("email")) {
+          setEmailError("Cet email est déjà utilisé.");
+        } else {
+          alert("Erreur lors de l'inscription.");
+        }
+      } else {
+        alert("Inscription réussie !");
+        // Ici tu peux rediriger l'utilisateur si nécessaire
+      }
     } catch (err) {
       console.error(err);
       alert("Erreur lors de l'inscription.");
@@ -87,6 +102,7 @@ const RegisterPage = () => {
               onChange={handleChange}
               required
             />
+            {emailError && <p className={classes.error}>{emailError}</p>}
 
             <label>Mot de passe</label>
             <input

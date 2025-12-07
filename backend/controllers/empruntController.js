@@ -45,4 +45,28 @@ const getEmpruntLivre = async (req, res) => {
   }
 };
 
-module.exports = { emprunter, rendre, getUserEmprunts, getEmpruntLivre };
+const emprunterPourUser = async (req, res) => {
+  console.log("🟢 emprunterPourUser appelé", req.body);
+};
+
+try {
+  const { id_user, id_livre, date_retour_prevu } = req.body;
+
+  if (!id_user) {
+    return res.status(400).json({ message: "id_user manquant" });
+  }
+
+  await empruntService.emprunter(id_user, id_livre, date_retour_prevu);
+
+  res.status(201).json({ message: "Livre emprunté pour l'utilisateur" });
+} catch (err) {
+  res.status(400).json({ message: err.message });
+}
+
+module.exports = {
+  emprunter,
+  rendre,
+  getUserEmprunts,
+  getEmpruntLivre,
+  emprunterPourUser,
+};

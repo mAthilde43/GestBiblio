@@ -116,3 +116,9 @@ input:focus {
 .registerBtn:hover {
   background-color: #7a6a58;
 }
+
+.error {
+  color: red;
+  font-size: 14px;
+  margin: -20px 0 20px 20px;
+}

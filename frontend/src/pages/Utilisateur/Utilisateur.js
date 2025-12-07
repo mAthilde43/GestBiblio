@@ -8,42 +8,118 @@ const Utilisateur = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [livresDisponibles, setLivresDisponibles] = useState([]);
+  const [selectedLivre, setSelectedLivre] = useState("");
 
+  // Charger utilisateurs
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/users`);
-        if (!response.ok)
-          throw new Error("Erreur lors de la récupération des utilisateurs");
-        const data = await response.json();
-
-        // filtrer les utilisateurs avec au moins un livre non rendu
-        const nonRenduUsers = data.filter((u) =>
-          (u.emprunts || []).some((e) => !e.date_retour_effectif)
-        );
-
-        setUsers(nonRenduUsers);
-        setFilteredUsers(nonRenduUsers);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchUsers();
+    fetchLivres();
   }, []);
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/users`);
+      if (!response.ok) throw new Error("Erreur récupération utilisateurs");
+      const data = await response.json();
+      setUsers(data);
+      setFilteredUsers(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchLivres = async () => {
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/livres`);
+      const data = await res.json();
+      setLivresDisponibles(data.filter((l) => !l.emprunteur)); // livres libres
+    } catch (err) {
+      console.error("Erreur chargement livres :", err);
+    }
+  };
 
   const handleSearch = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
-
-    const filtered = users.filter(
-      (user) =>
-        user.nom.toLowerCase().includes(value) ||
-        user.email.toLowerCase().includes(value) ||
-        (user.emprunts || []).some((e) => e.titre.toLowerCase().includes(value))
+    setFilteredUsers(
+      users.filter(
+        (user) =>
+          user.nom.toLowerCase().includes(value) ||
+          user.email.toLowerCase().includes(value) ||
+          (user.emprunts || []).some((e) =>
+            e.titre.toLowerCase().includes(value)
+          )
+      )
     );
-    setFilteredUsers(filtered);
+  };
+  const handleReturnBook = async (id_emprunt) => {
+    try {
+      await fetch(
+        `${process.env.REACT_APP_API_URL}/emprunts/${id_emprunt}/return`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      // Actualiser les utilisateurs et livres
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/users`);
+      const data = await response.json();
+      setUsers(data);
+      setFilteredUsers(data);
+      const updatedUser = data.find((u) => u.id_user === selectedUser.id_user);
+      setSelectedUser(updatedUser);
+
+      fetchLivres();
+    } catch (err) {
+      console.error(err);
+      alert("Impossible de rendre le livre");
+    }
+  };
+
+  const handleBorrowBook = async () => {
+    if (!selectedLivre) return alert("Sélectionnez un livre");
+
+    try {
+      await fetch(
+        `${process.env.REACT_APP_API_URL}/emprunts/emprunterForUser`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            id_livre: selectedLivre,
+            id_user: selectedUser.id_user,
+            date_retour_prevu: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+          }),
+        }
+      );
+
+      alert("Livre emprunté avec succès !");
+
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/users`);
+      const data = await response.json();
+      setUsers(data);
+      setFilteredUsers(data);
+
+      const updatedUser = data.find((u) => u.id_user === selectedUser.id_user);
+      setSelectedUser(updatedUser);
+
+      fetchLivres();
+      setSelectedLivre("");
+    } catch (err) {
+      console.error(err);
+      alert("Impossible d'emprunter le livre : " + err.message);
+    }
   };
 
   if (loading) return <p className={classes.loading}>Chargement...</p>;
@@ -113,6 +189,7 @@ const Utilisateur = () => {
               <p>Email: {selectedUser.email}</p>
               <p>Téléphone: {selectedUser.telephone || "Non renseigné"}</p>
 
+              {/* Emprunts en cours */}
               <div className={classes.section}>
                 <h3>Emprunts en cours</h3>
                 {(selectedUser.emprunts || []).filter(
@@ -122,24 +199,60 @@ const Utilisateur = () => {
                 ) : (
                   <ul className={classes.empruntList}>
                     {selectedUser.emprunts
+
                       .filter((e) => !e.date_retour_effectif)
-                      .map((e, idx) => (
-                        <li key={idx} className={classes.empruntItem}>
-                          <strong>{e.titre}</strong>
-                          <div>
-                            Date emprunt :{" "}
-                            {new Date(e.date_emprunt).toLocaleDateString()}
-                          </div>
-                          <div>
-                            Date retour prévu :{" "}
-                            {new Date(e.date_retour_prevu).toLocaleDateString()}
-                          </div>
-                        </li>
-                      ))}
+                      .map((e, idx) => {
+                        const isLate =
+                          new Date(e.date_retour_prevu) < new Date();
+                        return (
+                          <li
+                            key={idx}
+                            className={classes.empruntItem}
+                            style={{
+                              borderLeft: isLate ? "4px solid red" : "",
+                            }}
+                          >
+                            <strong>{e.titre || "Titre inconnu"}</strong>
+                            <div>
+                              Date emprunt:{" "}
+                              {new Date(e.date_emprunt).toLocaleDateString()}
+                            </div>
+                            <div>
+                              Date retour prévu:{" "}
+                              {new Date(
+                                e.date_retour_prevu
+                              ).toLocaleDateString()}
+                            </div>
+                            <button
+                              onClick={() => handleReturnBook(e.id_emprunt)}
+                            >
+                              Marquer comme rendu
+                            </button>
+                          </li>
+                        );
+                      })}
                   </ul>
                 )}
               </div>
 
+              {/* Emprunter un livre */}
+              <div className={classes.section}>
+                <h3>Emprunter un livre</h3>
+                <select
+                  value={selectedLivre}
+                  onChange={(e) => setSelectedLivre(e.target.value)}
+                >
+                  <option value="">Sélectionnez un livre</option>
+                  {livresDisponibles.map((l) => (
+                    <option key={l.id_livre} value={l.id_livre}>
+                      {l.titre}
+                    </option>
+                  ))}
+                </select>
+                <button onClick={handleBorrowBook}>Emprunter</button>
+              </div>
+
+              {/* Livres rendus */}
               <div className={classes.section}>
                 <h3>Livres rendus</h3>
                 {(selectedUser.emprunts || []).filter(
@@ -154,15 +267,15 @@ const Utilisateur = () => {
                         <li key={idx} className={classes.empruntItem}>
                           <strong>{e.titre}</strong>
                           <div>
-                            Date emprunt :{" "}
+                            Date emprunt:{" "}
                             {new Date(e.date_emprunt).toLocaleDateString()}
                           </div>
                           <div>
-                            Date retour prévu :{" "}
+                            Date retour prévu:{" "}
                             {new Date(e.date_retour_prevu).toLocaleDateString()}
                           </div>
                           <div>
-                            Date retour effectif :{" "}
+                            Date retour effectif:{" "}
                             {new Date(
                               e.date_retour_effectif
                             ).toLocaleDateString()}
