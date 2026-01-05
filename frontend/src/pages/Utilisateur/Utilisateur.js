@@ -248,6 +248,7 @@ const Utilisateur = () => {
                               ).toLocaleDateString()}
                             </div>
                             <button
+                              className={classes.returnBook}
                               onClick={() => handleReturnBook(e.id_emprunt)}
                             >
                               Marquer comme rendu
@@ -273,7 +274,12 @@ const Utilisateur = () => {
                     </option>
                   ))}
                 </select>
-                <button onClick={handleBorrowBook}>Emprunter</button>
+                <button
+                  className={classes.empruntButton}
+                  onClick={handleBorrowBook}
+                >
+                  Emprunter
+                </button>
               </div>
 
               {/* Livres rendus */}
