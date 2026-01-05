@@ -16,4 +16,11 @@ router.post(
   empruntController.emprunterPourUser
 );
 
+router.put(
+  "/:id_emprunt/return",
+  authMiddleware,
+  isAdmin,
+  empruntController.rendreParEmprunt
+);
+
 module.exports = router;

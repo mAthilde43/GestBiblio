@@ -25,6 +25,8 @@ const getAllUsers = async (req, res) => {
 
       const emprunts =
         Emprunts?.map((e) => ({
+          id_emprunt: e.id_emprunt,
+          id_livre: e.id_livre,
           titre: e.Livre.titre || "Inconnu",
           date_emprunt: e.date_emprunt,
           date_retour_prevu: e.date_retour_prevu,

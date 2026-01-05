@@ -63,17 +63,18 @@ const Utilisateur = () => {
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
 
-      // Actualiser les utilisateurs et livres
+      // 🔄 recharger les données
       const response = await fetch(`${process.env.REACT_APP_API_URL}/users`);
       const data = await response.json();
+
       setUsers(data);
       setFilteredUsers(data);
+
       const updatedUser = data.find((u) => u.id_user === selectedUser.id_user);
       setSelectedUser(updatedUser);
 

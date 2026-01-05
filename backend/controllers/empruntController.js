@@ -1,5 +1,6 @@
 const empruntService = require("../services/empruntService");
 const empruntRepo = require("../repositories/empruntRepository");
+const { Emprunt } = require("../models");
 
 const emprunter = async (req, res) => {
   try {
@@ -47,21 +48,38 @@ const getEmpruntLivre = async (req, res) => {
 
 const emprunterPourUser = async (req, res) => {
   console.log("🟢 emprunterPourUser appelé", req.body);
+
+  try {
+    const { id_user, id_livre, date_retour_prevu } = req.body;
+
+    if (!id_user) {
+      return res.status(400).json({ message: "id_user manquant" });
+    }
+
+    await empruntService.emprunter(id_user, id_livre, date_retour_prevu);
+
+    res.status(201).json({ message: "Livre emprunté pour l'utilisateur" });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 };
 
-try {
-  const { id_user, id_livre, date_retour_prevu } = req.body;
+const rendreParEmprunt = async (req, res) => {
+  const { id_emprunt } = req.params;
 
-  if (!id_user) {
-    return res.status(400).json({ message: "id_user manquant" });
+  const updated = await Emprunt.update(
+    { date_retour_effectif: new Date() },
+    { where: { id_emprunt, date_retour_effectif: null } }
+  );
+
+  if (updated[0] === 0) {
+    return res
+      .status(404)
+      .json({ message: "Emprunt introuvable ou déjà rendu" });
   }
 
-  await empruntService.emprunter(id_user, id_livre, date_retour_prevu);
-
-  res.status(201).json({ message: "Livre emprunté pour l'utilisateur" });
-} catch (err) {
-  res.status(400).json({ message: err.message });
-}
+  res.json({ message: "Livre rendu" });
+};
 
 module.exports = {
   emprunter,
@@ -69,4 +87,5 @@ module.exports = {
   getUserEmprunts,
   getEmpruntLivre,
   emprunterPourUser,
+  rendreParEmprunt,
 };
