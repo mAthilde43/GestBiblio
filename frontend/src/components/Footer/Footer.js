@@ -29,13 +29,22 @@ const Footer = () => {
         <div className={classes.right}>
           <h4>Contact</h4>
           <p>
-            <strong>Adresse:</strong> 234 Avenue de Colmar 67071 STRASBOURG
+            <strong>Adresse:</strong>{" "}
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=234+Avenue+de+Colmar+67071+STRASBOURG"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              234 Avenue de Colmar 67071 STRASBOURG
+            </a>
           </p>
           <p>
-            <strong>Email:</strong> contact@booklyst.com
+            <strong>Email:</strong>{" "}
+            <a href="mailto:contact@booklyst.com">contact@booklyst.com</a>
           </p>
           <p>
-            <strong>Téléphone:</strong> +33 3 88 43 08 00
+            <strong>Téléphone:</strong>{" "}
+            <a href="tel:+33388430800">+33 3 88 43 08 00</a>
           </p>
         </div>
       </div>
