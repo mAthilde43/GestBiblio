@@ -5,11 +5,9 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 
-const SearchBar = () => {
+const SearchBar = ({ onSearch }) => {
   const { user } = useContext(AuthContext);
   const [themes, setThemes] = useState([]);
-
-  // Nouveaux états pour chaque champ
   const [search, setSearch] = useState("");
   const [author, setAuthor] = useState("");
   const [theme, setTheme] = useState("");
@@ -34,11 +32,26 @@ const SearchBar = () => {
     setAuthor("");
     setTheme("");
     setDate("");
+    onSearch({ search: "", author: "", theme: "", date: "" });
+  };
+
+  const handleChange = (field, value) => {
+    if (field === "search") setSearch(value);
+    if (field === "author") setAuthor(value);
+    if (field === "theme") setTheme(value);
+    if (field === "date") setDate(value);
+
+    onSearch({
+      search: field === "search" ? value : search,
+      author: field === "author" ? value : author,
+      theme: field === "theme" ? value : theme,
+      date: field === "date" ? value : date,
+    });
   };
 
   return (
     <div className={classes.searchContainer}>
-      {user && user.id_role === 2 && (
+      {user?.id_role === 2 && (
         <Link to="/add-book" className={classes.addButton}>
           + Ajouter un livre
         </Link>
@@ -49,7 +62,7 @@ const SearchBar = () => {
         placeholder="Rechercher un livre..."
         className={classes.input}
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => handleChange("search", e.target.value)}
       />
 
       <input
@@ -57,30 +70,22 @@ const SearchBar = () => {
         placeholder="Auteur"
         className={classes.input}
         value={author}
-        onChange={(e) => setAuthor(e.target.value)}
+        onChange={(e) => handleChange("author", e.target.value)}
       />
 
       <select
         className={classes.select}
         value={theme}
-        onChange={(e) => setTheme(e.target.value)}
+        onChange={(e) => handleChange("theme", e.target.value)}
       >
         <option value="">Thème</option>
-        {themes.map((theme) => (
-          <option key={theme.id_theme} value={theme.nom}>
-            {theme.nom}
+        {themes.map((t) => (
+          <option key={t.id_theme} value={t.nom}>
+            {t.nom}
           </option>
         ))}
       </select>
 
-      <input
-        type="date"
-        className={classes.input}
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-      />
-
-      {/* Bouton reset à droite */}
       <button className={classes.resetButton} onClick={handleReset}>
         <FontAwesomeIcon icon={faRotateRight} />
       </button>

@@ -2,10 +2,12 @@ import React, { useEffect, useState, useContext } from "react";
 import Card from "../../components/Card/Card";
 import classes from "./Catalogue.module.css";
 import { AuthContext } from "../../contexts/AuthContext";
-import Slider from "react-slick"; // importer react-slick
+import Slider from "react-slick";
 import { NextArrow, PrevArrow } from "../../components/CustomArrow/CustomArrow";
+import SearchBar from "../../components/SearchBar/SearchBar";
 
 const Catalogue = () => {
+  const [allLivres, setAllLivres] = useState([]);
   const [livres, setLivres] = useState([]);
   const [favorisList, setFavorisList] = useState([]);
   const { user, token } = useContext(AuthContext);
@@ -16,7 +18,10 @@ const Catalogue = () => {
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/livres`)
       .then((res) => res.json())
-      .then((data) => setLivres(data))
+      .then((data) => {
+        setAllLivres(data);
+        setLivres(data);
+      })
       .catch((err) => console.error("Erreur :", err));
   }, []);
 
@@ -43,12 +48,41 @@ const Catalogue = () => {
     );
   };
 
-  // Grouper les livres par thème
+  // Filtrage selon la recherche
+  const handleSearch = ({ search, author, theme, date }) => {
+    let filtered = allLivres;
+
+    if (search) {
+      filtered = filtered.filter((l) =>
+        l.titre.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    if (author) {
+      filtered = filtered.filter((l) =>
+        l.Auteurs?.some((a) =>
+          a.nom.toLowerCase().includes(author.toLowerCase())
+        )
+      );
+    }
+
+    if (theme) {
+      filtered = filtered.filter((l) => l.Themes?.some((t) => t.nom === theme));
+    }
+
+    if (date) {
+      filtered = filtered.filter((l) => l.date_parution?.slice(0, 10) === date);
+    }
+
+    setLivres(filtered);
+  };
+
+  // Grouper les livres par thème pour l'affichage
   const livresParTheme = livres.reduce((acc, livre) => {
     if (livre.Themes && livre.Themes.length > 0) {
-      livre.Themes.forEach((theme) => {
-        if (!acc[theme.nom]) acc[theme.nom] = [];
-        acc[theme.nom].push(livre);
+      livre.Themes.forEach((t) => {
+        if (!acc[t.nom]) acc[t.nom] = [];
+        acc[t.nom].push(livre);
       });
     } else {
       if (!acc["Sans thème"]) acc["Sans thème"] = [];
@@ -57,35 +91,27 @@ const Catalogue = () => {
     return acc;
   }, {});
 
-  // Settings pour le slider
   const sliderSettings = {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 4, // nombre de livres visibles
+    slidesToShow: 4,
     slidesToScroll: 1,
     arrows: true,
     nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />, // Utiliser PrevArrow si défini
+    prevArrow: <PrevArrow />,
     responsive: [
-      {
-        breakpoint: 1024,
-        settings: { slidesToShow: 3 },
-      },
-      {
-        breakpoint: 768,
-        settings: { slidesToShow: 2 },
-      },
-      {
-        breakpoint: 480,
-        settings: { slidesToShow: 1 },
-      },
+      { breakpoint: 1024, settings: { slidesToShow: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 2 } },
+      { breakpoint: 480, settings: { slidesToShow: 1 } },
     ],
   };
 
   return (
     <div className={classes.catalogueContainer}>
       <h1 className={classes.catalogueTitle}>Catalogue</h1>
+
+      <SearchBar onSearch={handleSearch} />
 
       {Object.keys(livresParTheme)
         .sort((a, b) => a.localeCompare(b))
