@@ -36,7 +36,16 @@ const Utilisateur = () => {
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/livres`);
       const data = await res.json();
-      setLivresDisponibles(data.filter((l) => !l.emprunteur)); // livres libres
+      setLivresDisponibles(
+        data.filter(
+          (l) =>
+            !users.some((u) =>
+              (u.emprunts || []).some(
+                (e) => e.id_livre === l.id_livre && !e.date_retour_effectif
+              )
+            )
+        )
+      );
     } catch (err) {
       console.error("Erreur chargement livres :", err);
     }
@@ -88,8 +97,12 @@ const Utilisateur = () => {
   const handleBorrowBook = async () => {
     if (!selectedLivre) return alert("Sélectionnez un livre");
 
+    const dateRetour = new Date(
+      Date.now() + 14 * 24 * 60 * 60 * 1000
+    ).toISOString();
+
     try {
-      await fetch(
+      const res = await fetch(
         `${process.env.REACT_APP_API_URL}/emprunts/emprunterForUser`,
         {
           method: "POST",
@@ -98,28 +111,37 @@ const Utilisateur = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify({
-            id_livre: selectedLivre,
+            id_livre: Number(selectedLivre),
             id_user: selectedUser.id_user,
-            date_retour_prevu: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+            date_retour_prevu: dateRetour,
           }),
         }
       );
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message);
+      }
 
       alert("Livre emprunté avec succès !");
 
       const response = await fetch(`${process.env.REACT_APP_API_URL}/users`);
       const data = await response.json();
+
       setUsers(data);
       setFilteredUsers(data);
 
+      // 🔥 METTRE À JOUR LE USER OUVERT
       const updatedUser = data.find((u) => u.id_user === selectedUser.id_user);
+
       setSelectedUser(updatedUser);
 
+      // 🔄 MAJ livres disponibles
       fetchLivres();
       setSelectedLivre("");
     } catch (err) {
       console.error(err);
-      alert("Impossible d'emprunter le livre : " + err.message);
+      alert(err.message);
     }
   };
 
@@ -214,6 +236,7 @@ const Utilisateur = () => {
                             }}
                           >
                             <strong>{e.titre || "Titre inconnu"}</strong>
+
                             <div>
                               Date emprunt:{" "}
                               {new Date(e.date_emprunt).toLocaleDateString()}
@@ -266,7 +289,7 @@ const Utilisateur = () => {
                       .filter((e) => e.date_retour_effectif)
                       .map((e, idx) => (
                         <li key={idx} className={classes.empruntItem}>
-                          <strong>{e.titre}</strong>
+                          <strong>{e.titre || "Titre inconnu"}</strong>
                           <div>
                             Date emprunt:{" "}
                             {new Date(e.date_emprunt).toLocaleDateString()}
