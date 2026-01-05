@@ -165,7 +165,7 @@
 .empruntList {
   list-style: none;
   padding-left: 0;
-  max-height: 300px;
+  max-height: 310px;
   overflow-y: auto;
 }
 
