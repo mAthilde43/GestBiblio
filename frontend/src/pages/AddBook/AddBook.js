@@ -256,10 +256,10 @@ const AddBook = ({ editMode }) => {
                   )}
                 </div>
 
-                {showDropdownIndex === idx && a && (
+                {showDropdownIndex === idx && (
                   <ul className={classes.dropdown}>
                     {auteursExistants
-                      .filter((au) => au.nom.toLowerCase().includes(a.toLowerCase()))
+                      .filter((au) => au.nom.toLowerCase().includes((a || "").toLowerCase()))
                       .map((au) => (
                         <li
                           key={au.id_auteur}
