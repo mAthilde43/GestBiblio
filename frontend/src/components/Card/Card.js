@@ -11,7 +11,7 @@ const Card = ({ livre, onDelete, userRole, favorisList, onFavoriChange }) => {
   const { token } = useContext(AuthContext);
   const auteur =
     livre.Auteurs && livre.Auteurs.length > 0
-      ? `${livre.Auteurs[0].nom}`
+      ? livre.Auteurs.map((a) => a.nom).join(", ")
       : "Auteur inconnu";
 
   const [isFavori, setIsFavori] = useState(false);

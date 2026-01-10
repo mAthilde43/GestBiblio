@@ -181,3 +181,63 @@ textarea {
 .editImageBtn:hover {
   background-color: #f3ece4;
 }
+
+/* New styles for authors/themes rows and inline + / - buttons */
+.authorRow,
+.themeRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px; /* small spacing from label */
+}
+
+.authorRow input,
+.themeRow select {
+  flex: 1 1 auto; /* take available space */
+  min-width: 0; /* allow shrinking inside flex */
+}
+
+.inlineButtons {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.addBtn,
+.removeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 2px solid #b19c88;
+  background: #b19c88;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s, transform 0.08s;
+}
+
+.addBtn:hover,
+.removeBtn:hover {
+  background-color: #b19c88;
+  transform: translateY(-1px);
+}
+
+.removeBtn {
+  color: #b04f4f;
+  border-color: #d29a9a;
+}
+
+/* small responsive tweak: stack on very small screens */
+@media (max-width: 520px) {
+  .authorRow,
+  .themeRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .inlineButtons {
+    justify-content: flex-end;
+  }
+}

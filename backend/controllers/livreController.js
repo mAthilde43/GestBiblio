@@ -27,7 +27,7 @@ const create = async (req, res) => {
     console.log("req.body:", req.body);
     console.log("req.file:", req.file);
 
-    const { titre, date_parution, description, id_theme, auteur } = req.body;
+  const { titre, date_parution, description, id_theme, auteur } = req.body;
     const image_url = req.file ? `/uploads/${req.file.filename}` : null;
 
     // Créer le livre
@@ -38,15 +38,28 @@ const create = async (req, res) => {
       image_url,
     });
 
-    // Ajouter le thème si sélectionné
+    // Ajouter le(s) thème(s) si sélectionné(s)
     if (id_theme) {
-      await newLivre.addTheme(id_theme);
+      if (Array.isArray(id_theme)) {
+        // addThemes accepts array of ids
+        await newLivre.addThemes(id_theme);
+      } else {
+        await newLivre.addTheme(id_theme);
+      }
     }
 
-    // Ajouter ou créer l’auteur
+    // Ajouter ou créer le(s) auteur(s)
     if (auteur) {
-      const auteurObj = await findOrCreateAuteur(auteur);
-      await newLivre.addAuteur(auteurObj.id_auteur);
+      if (Array.isArray(auteur)) {
+        for (const nom of auteur) {
+          if (!nom) continue;
+          const auteurObj = await findOrCreateAuteur(nom);
+          await newLivre.addAuteur(auteurObj.id_auteur);
+        }
+      } else {
+        const auteurObj = await findOrCreateAuteur(auteur);
+        await newLivre.addAuteur(auteurObj.id_auteur);
+      }
     }
 
     res.status(201).json(newLivre);
@@ -68,15 +81,29 @@ const update = async (req, res) => {
       image_url,
     });
 
-    // Mettre à jour le thème si présent
+    // Mettre à jour le(s) thème(s) si présent(s)
     if (id_theme) {
-      await updatedLivre.setThemes([id_theme]);
+      if (Array.isArray(id_theme)) {
+        await updatedLivre.setThemes(id_theme);
+      } else {
+        await updatedLivre.setThemes([id_theme]);
+      }
     }
 
-    // Mettre à jour l'auteur si présent
+    // Mettre à jour le(s) auteur(s) si présent(s)
     if (auteur) {
-      const auteurObj = await findOrCreateAuteur(auteur);
-      await updatedLivre.setAuteurs([auteurObj.id_auteur]);
+      if (Array.isArray(auteur)) {
+        const auteurIds = [];
+        for (const nom of auteur) {
+          if (!nom) continue;
+          const auteurObj = await findOrCreateAuteur(nom);
+          auteurIds.push(auteurObj.id_auteur);
+        }
+        await updatedLivre.setAuteurs(auteurIds);
+      } else {
+        const auteurObj = await findOrCreateAuteur(auteur);
+        await updatedLivre.setAuteurs([auteurObj.id_auteur]);
+      }
     }
 
     // Recharger les relations pour retourner l'objet complet

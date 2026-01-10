@@ -4,17 +4,19 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const AddBook = ({ editMode }) => {
   const [themes, setThemes] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
+  // dropdown per author input index
+  const [showDropdownIndex, setShowDropdownIndex] = useState(null);
   const [auteursExistants, setAuteursExistants] = useState([]);
+  // support multiple authors and themes
   const [formData, setFormData] = useState({
     titre: "",
-    auteur: "",
     date_parution: "",
-    id_theme: "",
     description: "",
     image: null,
     currentImageUrl: "", // URL de l'image existante
   });
+  const [authors, setAuthors] = useState([""]);
+  const [selectedThemes, setSelectedThemes] = useState([""]);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -60,13 +62,24 @@ const AddBook = ({ editMode }) => {
           const data = await res.json();
           setFormData({
             titre: data.titre || "",
-            auteur: data.Auteurs?.[0]?.nom || "",
+            // load authors (names)
+            // We'll set authors array separately below
             date_parution: data.date_parution?.split("T")[0] || "",
-            id_theme: data.Themes?.[0]?.id_theme || "",
             description: data.description || "",
             image: null,
             currentImageUrl: data.image_url || "", // URL de l'image existante
           });
+          // populate authors and themes arrays
+          setAuthors(
+            data.Auteurs && data.Auteurs.length
+              ? data.Auteurs.map((a) => a.nom)
+              : [""]
+          );
+          setSelectedThemes(
+            data.Themes && data.Themes.length
+              ? data.Themes.map((t) => t.id_theme)
+              : [""]
+          );
         } catch (err) {
           console.error(err);
           alert("Impossible de charger les informations du livre.");
@@ -82,15 +95,43 @@ const AddBook = ({ editMode }) => {
     else setFormData({ ...formData, [name]: value });
   };
 
+  const handleAuthorChange = (index, value) => {
+    const newAuthors = [...authors];
+    newAuthors[index] = value;
+    setAuthors(newAuthors);
+  };
+
+  const addAuthor = () => setAuthors([...authors, ""]);
+  const removeAuthor = (index) =>
+    setAuthors(authors.filter((_, i) => i !== index));
+
+  const handleThemeChange = (index, value) => {
+    const newThemes = [...selectedThemes];
+    newThemes[index] = value;
+    setSelectedThemes(newThemes);
+  };
+
+  const addTheme = () => setSelectedThemes([...selectedThemes, ""]);
+  const removeTheme = (index) =>
+    setSelectedThemes(selectedThemes.filter((_, i) => i !== index));
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formDataToSend = new FormData();
     formDataToSend.append("titre", formData.titre);
-    formDataToSend.append("auteur", formData.auteur);
     formDataToSend.append("date_parution", formData.date_parution);
-    formDataToSend.append("id_theme", formData.id_theme);
     formDataToSend.append("description", formData.description);
+
+    // append each author (repeat the same key so backend gets array or repeated values)
+    authors.forEach((a) => {
+      if (a && a.trim()) formDataToSend.append("auteur", a.trim());
+    });
+
+    // append each selected theme id
+    selectedThemes.forEach((t) => {
+      if (t) formDataToSend.append("id_theme", t);
+    });
 
     // Ajouter l'image seulement si elle a été changée
     if (formData.image) formDataToSend.append("image", formData.image);
@@ -191,41 +232,49 @@ const AddBook = ({ editMode }) => {
 
           <label style={{ position: "relative" }}>
             Auteur :
-            <input
-              type="text"
-              name="auteur"
-              value={formData.auteur}
-              onChange={(e) => {
-                setFormData({ ...formData, auteur: e.target.value });
-                setShowDropdown(true);
-              }}
-              onFocus={() => setShowDropdown(true)}
-              onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
-              placeholder="Insérer le nom de l’auteur"
-              autoComplete="off"
-              required
-            />
-            {showDropdown && (
-              <ul className={classes.dropdown}>
-                {auteursExistants
-                  .filter((auteur) =>
-                    auteur.nom
-                      .toLowerCase()
-                      .includes(formData.auteur.toLowerCase())
-                  )
-                  .map((auteur) => (
-                    <li
-                      key={auteur.id_auteur}
-                      onClick={() => {
-                        setFormData({ ...formData, auteur: auteur.nom });
-                        setShowDropdown(false);
-                      }}
-                    >
-                      {auteur.nom}
-                    </li>
-                  ))}
-              </ul>
-            )}
+            {authors.map((a, idx) => (
+              <div key={idx} className={classes.authorRow}>
+                <input
+                  type="text"
+                  value={a}
+                  onChange={(e) => handleAuthorChange(idx, e.target.value)}
+                  onFocus={() => setShowDropdownIndex(idx)}
+                  onBlur={() => setTimeout(() => setShowDropdownIndex(null), 100)}
+                  placeholder="Insérer le nom de l’auteur"
+                  autoComplete="off"
+                  required={idx === 0}
+                />
+                <div className={classes.inlineButtons}>
+                  {idx === authors.length - 1 ? (
+                    <button type="button" onClick={addAuthor} className={classes.addBtn}>
+                      +
+                    </button>
+                  ) : (
+                    <button type="button" onClick={() => removeAuthor(idx)} className={classes.removeBtn}>
+                      −
+                    </button>
+                  )}
+                </div>
+
+                {showDropdownIndex === idx && a && (
+                  <ul className={classes.dropdown}>
+                    {auteursExistants
+                      .filter((au) => au.nom.toLowerCase().includes(a.toLowerCase()))
+                      .map((au) => (
+                        <li
+                          key={au.id_auteur}
+                          onClick={() => {
+                            handleAuthorChange(idx, au.nom);
+                            setShowDropdownIndex(null);
+                          }}
+                        >
+                          {au.nom}
+                        </li>
+                      ))}
+                  </ul>
+                )}
+              </div>
+            ))}
           </label>
 
           <label>
@@ -240,19 +289,33 @@ const AddBook = ({ editMode }) => {
 
           <label>
             Thème :
-            <select
-              name="id_theme"
-              value={formData.id_theme}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Sélectionner le thème</option>
-              {themes.map((theme) => (
-                <option key={theme.id_theme} value={theme.id_theme}>
-                  {theme.nom}
-                </option>
-              ))}
-            </select>
+            {selectedThemes.map((t, idx) => (
+              <div key={idx} className={classes.themeRow}>
+                <select
+                  value={t}
+                  onChange={(e) => handleThemeChange(idx, e.target.value)}
+                  required={idx === 0}
+                >
+                  <option value="">Sélectionner le thème</option>
+                  {themes.map((theme) => (
+                    <option key={theme.id_theme} value={theme.id_theme}>
+                      {theme.nom}
+                    </option>
+                  ))}
+                </select>
+                <div className={classes.inlineButtons}>
+                  {idx === selectedThemes.length - 1 ? (
+                    <button type="button" onClick={addTheme} className={classes.addBtn}>
+                      +
+                    </button>
+                  ) : (
+                    <button type="button" onClick={() => removeTheme(idx)} className={classes.removeBtn}>
+                      −
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
           </label>
 
           <label>
