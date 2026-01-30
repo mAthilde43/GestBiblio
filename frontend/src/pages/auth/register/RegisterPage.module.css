@@ -14,36 +14,36 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 4rem 2rem;
+  padding: clamp(24px, 6vw, 64px) clamp(12px, 4vw, 32px);
   text-align: center;
 }
 
 .left h1 {
-  font-size: 70px;
-  margin-bottom: 1rem;
+  font-size: clamp(40px, 5vw, 72px);
+  margin-bottom: 16px;
   font-weight: bold;
 }
 
 .left h2 {
-  font-size: 30px;
-  margin-bottom: 10rem;
+  font-size: clamp(16px, 2.5vw, 30px);
+  margin-bottom: clamp(16px, 6vw, 96px);
   font-weight: normal;
   width: 70%;
 }
 
 .left p {
-  margin-bottom: 1rem;
-  font-size: 20px;
+  margin-bottom: 16px;
+  font-size: clamp(14px, 1.2vw, 20px);
 }
 
 .loginBtn {
-  padding: 0.5rem 2rem;
+  padding: 8px 32px;
   border: 2px solid white;
   background: transparent;
   color: white;
   cursor: pointer;
   border-radius: 12px;
-  font-size: 20px;
+  font-size: clamp(15px, 1.5vw, 20px);
   transition: all 0.3s ease;
   text-decoration: none;
 }
@@ -59,13 +59,13 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 4rem 3rem;
+  padding: clamp(24px, 4vw, 64px) clamp(16px, 3vw, 48px);
 }
 
 .right h2 {
-  font-size: 50px;
+  font-size: clamp(28px, 4vw, 48px);
   color: #9e8c78;
-  margin-bottom: 2rem;
+  margin-bottom: 32px;
   font-weight: bold;
 }
 
@@ -77,19 +77,19 @@ form {
 }
 
 label {
-  margin-bottom: 0.25rem;
+  margin-bottom: 4px;
   font-weight: 600;
   color: #4d453f;
   text-align: left;
-  font-size: 20px;
+  font-size: clamp(15px, 1.2vw, 20px);
 }
 
 input {
-  margin-bottom: 1.5rem;
-  padding: 0.75rem 1rem;
+  margin-bottom: 24px;
+  padding: 12px 16px;
   border: 1.5px solid #9e8c78;
   border-radius: 12px;
-  font-size: 1rem;
+  font-size: clamp(14px, 1vw, 16px);
   outline: none;
   transition: all 0.2s ease;
 }
@@ -100,17 +100,17 @@ input:focus {
 }
 
 .registerBtn {
-  padding: 0.75rem;
+  padding: 12px;
   background-color: #9e8c78;
   color: white;
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  font-size: 20px;
+  font-size: clamp(15px, 1.5vw, 20px);
   transition: all 0.3s ease;
-  width: 30%;
+  width: clamp(160px, 30%, 280px);
   align-self: center;
-  margin-top: 1rem;
+  margin-top: 16px;
 }
 
 .registerBtn:hover {
@@ -121,4 +121,61 @@ input:focus {
   color: red;
   font-size: 14px;
   margin: -20px 0 20px 20px;
+}
+
+/* Mobile: empilement vertical et bloc coloré au dessus */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .left {
+    order: -1; /* bloc coloré apparait au-dessus */
+    width: auto;
+    flex: none;
+    border-radius: 0 0 0 0;
+    padding: 24px 20px;
+    text-align: center;
+  }
+
+  .left h1 {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .left h2 {
+    font-size: 16px;
+    margin-bottom: 24px;
+    width: 90%;
+  }
+
+  .right {
+    order: 0;
+    width: 90%;
+    flex: none;
+    padding: 20px 12px;
+  }
+
+  .right h2 {
+    margin-bottom: 22px;
+  }
+  form {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  label {
+    font-size: 18px;
+  }
+
+  input {
+    font-size: 16px;
+  }
+
+  .registerBtn {
+    width: 50%;
+    align-self: center;
+    margin: 0;
+  }
 }

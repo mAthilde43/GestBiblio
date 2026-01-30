@@ -56,7 +56,7 @@ const AddBook = ({ editMode }) => {
       const fetchLivre = async () => {
         try {
           const res = await fetch(
-            `${process.env.REACT_APP_API_URL}/livres/${id}`
+            `${process.env.REACT_APP_API_URL}/livres/${id}`,
           );
           if (!res.ok) throw new Error("Livre introuvable");
           const data = await res.json();
@@ -73,12 +73,12 @@ const AddBook = ({ editMode }) => {
           setAuthors(
             data.Auteurs && data.Auteurs.length
               ? data.Auteurs.map((a) => a.nom)
-              : [""]
+              : [""],
           );
           setSelectedThemes(
             data.Themes && data.Themes.length
               ? data.Themes.map((t) => t.id_theme)
-              : [""]
+              : [""],
           );
         } catch (err) {
           console.error(err);
@@ -186,7 +186,7 @@ const AddBook = ({ editMode }) => {
             </>
           ) : formData.currentImageUrl ? (
             <>
-              <img
+              <imgage
                 src={`${process.env.REACT_APP_API_URL}${formData.currentImageUrl}`}
                 alt="Image du livre"
                 className={classes.preview}
@@ -239,18 +239,28 @@ const AddBook = ({ editMode }) => {
                   value={a}
                   onChange={(e) => handleAuthorChange(idx, e.target.value)}
                   onFocus={() => setShowDropdownIndex(idx)}
-                  onBlur={() => setTimeout(() => setShowDropdownIndex(null), 100)}
+                  onBlur={() =>
+                    setTimeout(() => setShowDropdownIndex(null), 100)
+                  }
                   placeholder="Insérer le nom de l’auteur"
                   autoComplete="off"
                   required={idx === 0}
                 />
                 <div className={classes.inlineButtons}>
                   {idx === authors.length - 1 ? (
-                    <button type="button" onClick={addAuthor} className={classes.addBtn}>
+                    <button
+                      type="button"
+                      onClick={addAuthor}
+                      className={classes.addBtn}
+                    >
                       +
                     </button>
                   ) : (
-                    <button type="button" onClick={() => removeAuthor(idx)} className={classes.removeBtn}>
+                    <button
+                      type="button"
+                      onClick={() => removeAuthor(idx)}
+                      className={classes.removeBtn}
+                    >
                       −
                     </button>
                   )}
@@ -259,7 +269,9 @@ const AddBook = ({ editMode }) => {
                 {showDropdownIndex === idx && (
                   <ul className={classes.dropdown}>
                     {auteursExistants
-                      .filter((au) => au.nom.toLowerCase().includes((a || "").toLowerCase()))
+                      .filter((au) =>
+                        au.nom.toLowerCase().includes((a || "").toLowerCase()),
+                      )
                       .map((au) => (
                         <li
                           key={au.id_auteur}
@@ -305,11 +317,19 @@ const AddBook = ({ editMode }) => {
                 </select>
                 <div className={classes.inlineButtons}>
                   {idx === selectedThemes.length - 1 ? (
-                    <button type="button" onClick={addTheme} className={classes.addBtn}>
+                    <button
+                      type="button"
+                      onClick={addTheme}
+                      className={classes.addBtn}
+                    >
                       +
                     </button>
                   ) : (
-                    <button type="button" onClick={() => removeTheme(idx)} className={classes.removeBtn}>
+                    <button
+                      type="button"
+                      onClick={() => removeTheme(idx)}
+                      className={classes.removeBtn}
+                    >
                       −
                     </button>
                   )}
