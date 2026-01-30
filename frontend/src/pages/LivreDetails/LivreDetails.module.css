@@ -94,3 +94,73 @@
 .connectBtn:hover {
   background-color: #f1e9e1;
 }
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .page {
+    padding: 16px;
+    min-height: auto;
+  }
+
+  .backBtn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+
+  .title {
+    font-size: 22px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .contentWrapper {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .bookImage {
+    width: 200px;
+    height: 300px;
+    border-radius: 18px;
+  }
+
+  .infoContainer {
+    max-width: 100%;
+    width: 100%;
+    font-size: 15px;
+    padding: 0 6px;
+  }
+
+  .buttonsRow {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .actionBtn,
+  .connectBtn {
+    width: 100%;
+    padding: 12px 18px;
+    font-size: 15px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 420px) {
+  .title {
+    font-size: 20px;
+  }
+
+  .bookImage {
+    width: 180px;
+    height: 260px;
+  }
+
+  .infoContainer {
+    font-size: 14px;
+  }
+}
