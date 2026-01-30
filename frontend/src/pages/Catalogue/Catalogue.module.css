@@ -25,3 +25,26 @@
   gap: 40px;
   justify-items: center;
 }
+
+/* Mobile adjustments for slider used in catalogue */
+@media (max-width: 768px) {
+  .slider .slick-track {
+    justify-content: center !important;
+  }
+  .catalogueContainer {
+    padding: 24px;
+  }
+
+  .slider .slick-prev,
+  .slider .slick-next {
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+
+  .slider .slick-prev {
+    left: 10px !important;
+  }
+  .slider .slick-next {
+    right: 10px !important;
+  }
+}

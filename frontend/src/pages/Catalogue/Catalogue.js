@@ -14,6 +14,30 @@ const Catalogue = () => {
 
   const userRole = user?.id_role;
 
+  // control how many slides to show based on current window width (mobile: 2)
+  const [slidesToShowState, setSlidesToShowState] = useState(() => {
+    if (typeof window === "undefined") return 4;
+    const w = window.innerWidth;
+    if (w <= 600) return 2;
+    if (w <= 768) return 2;
+    if (w <= 1024) return 3;
+    return 4;
+  });
+
+  useEffect(() => {
+    function update() {
+      const w = window.innerWidth;
+      if (w <= 600) setSlidesToShowState(2);
+      else if (w <= 768) setSlidesToShowState(2);
+      else if (w <= 1024) setSlidesToShowState(3);
+      else setSlidesToShowState(4);
+    }
+
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
   // Récupération des livres
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/livres`)
@@ -44,7 +68,7 @@ const Catalogue = () => {
     setFavorisList((prev) =>
       isFavori
         ? [...prev, livres.find((l) => l.id_livre === id_livre)]
-        : prev.filter((f) => f.id_livre !== id_livre)
+        : prev.filter((f) => f.id_livre !== id_livre),
     );
   };
 
@@ -54,15 +78,15 @@ const Catalogue = () => {
 
     if (search) {
       filtered = filtered.filter((l) =>
-        l.titre.toLowerCase().includes(search.toLowerCase())
+        l.titre.toLowerCase().includes(search.toLowerCase()),
       );
     }
 
     if (author) {
       filtered = filtered.filter((l) =>
         l.Auteurs?.some((a) =>
-          a.nom.toLowerCase().includes(author.toLowerCase())
-        )
+          a.nom.toLowerCase().includes(author.toLowerCase()),
+        ),
       );
     }
 
@@ -95,16 +119,13 @@ const Catalogue = () => {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: slidesToShowState,
     slidesToScroll: 1,
     arrows: true,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
-    responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
-      { breakpoint: 480, settings: { slidesToShow: 1 } },
-    ],
+    variableWidth: false,
+    centerMode: false,
   };
 
   return (
