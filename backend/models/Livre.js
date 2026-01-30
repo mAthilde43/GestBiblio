@@ -1,27 +1,38 @@
 const sequelize = require("../config/db");
 const { DataTypes } = require("sequelize");
 
-const Livre = sequelize.define("Livre", {
-  id_livre: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-    allowNull: false,
+const Livre = sequelize.define(
+  "Livre",
+  {
+    id_livre: {
+      type: DataTypes.INTEGER,
+      field: "idLivre",
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: false,
+    },
+    titre: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    date_parution: {
+      type: DataTypes.DATE,
+      field: "dateParution",
+    },
+    description: {
+      type: DataTypes.TEXT,
+    },
+    image_url: {
+      type: DataTypes.STRING,
+      field: "imageUrl",
+      allowNull: true,
+    },
   },
-  titre: {
-    type: DataTypes.STRING,
-    allowNull: false,
+  {
+    timestamps: false,
+    tableName: "Livres",
+    underscored: false,
   },
-  date_parution: {
-    type: DataTypes.DATE,
-  },
-  description: {
-    type: DataTypes.TEXT,
-  },
-  image_url: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-});
+);
 
 module.exports = Livre;

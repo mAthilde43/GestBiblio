@@ -1,6 +1,5 @@
 const sequelize = require("../config/db");
 const { DataTypes } = require("sequelize");
-
 const Role = require("./Role");
 const User = require("./User");
 const Livre = require("./Livre");
@@ -11,9 +10,11 @@ const Favoris = require("./Favoris");
 const Livre_Auteur = require("./Livre_Auteur");
 const Livre_Theme = require("./Livre_Theme");
 
+// Relations User - Role
 User.belongsTo(Role, { foreignKey: "id_role" });
 Role.hasMany(User, { foreignKey: "id_role" });
 
+// Relations Livre - Auteur (Many-to-Many)
 Livre.belongsToMany(Auteur, {
   through: Livre_Auteur,
   foreignKey: "id_livre",
@@ -25,6 +26,7 @@ Auteur.belongsToMany(Livre, {
   otherKey: "id_livre",
 });
 
+// Relations Livre - Theme (Many-to-Many)
 Livre.belongsToMany(Theme, {
   through: Livre_Theme,
   foreignKey: "id_livre",
@@ -36,6 +38,7 @@ Theme.belongsToMany(Livre, {
   otherKey: "id_livre",
 });
 
+// Relations User - Livre via Favoris (Many-to-Many)
 User.belongsToMany(Livre, {
   through: Favoris,
   foreignKey: "id_user",
@@ -47,24 +50,15 @@ Livre.belongsToMany(User, {
   otherKey: "id_user",
 });
 
-// User.belongsToMany(Livre, {
-//   through: Emprunt,
-//   foreignKey: "id_user",
-//   otherKey: "id_livre",
-// });
-// Livre.belongsToMany(User, {
-//   through: Emprunt,
-//   foreignKey: "id_livre",
-//   otherKey: "id_user",
-// });
-// Un User peut avoir plusieurs Emprunts
+// Relations User - Emprunt (One-to-Many)
 User.hasMany(Emprunt, { foreignKey: "id_user" });
 Emprunt.belongsTo(User, { foreignKey: "id_user" });
 
-// Un Livre peut avoir plusieurs Emprunts
+// Relations Livre - Emprunt (One-to-Many)
 Livre.hasMany(Emprunt, { foreignKey: "id_livre" });
 Emprunt.belongsTo(Livre, { foreignKey: "id_livre" });
 
+// Relations Favoris
 Favoris.belongsTo(User, { foreignKey: "id_user" });
 Favoris.belongsTo(Livre, { foreignKey: "id_livre" });
 User.hasMany(Favoris, { foreignKey: "id_user" });
