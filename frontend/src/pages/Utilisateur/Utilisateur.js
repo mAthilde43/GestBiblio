@@ -187,11 +187,11 @@ const Utilisateur = () => {
               );
               return (
                 <tr key={user.id_user}>
-                  <td>{user.nom}</td>
-                  <td>{user.prenom}</td>
-                  <td>{user.email}</td>
-                  <td>{nonRendus.length}</td>
-                  <td>
+                  <td data-label="Nom">{user.nom}</td>
+                  <td data-label="Prénom">{user.prenom}</td>
+                  <td data-label="Email">{user.email}</td>
+                  <td data-label="Livres non rendus">{nonRendus.length}</td>
+                  <td data-label="Actions">
                     <button
                       className={classes.actionButton}
                       onClick={() => setSelectedUser(user)}

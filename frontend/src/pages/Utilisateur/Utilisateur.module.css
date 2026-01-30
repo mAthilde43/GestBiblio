@@ -242,3 +242,96 @@
   border-left: 6px solid #d32f2f;
   padding-left: 8px;
 }
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .container {
+    margin: 20px auto;
+    padding: 0 12px;
+  }
+
+  .container h1 {
+    font-size: 28px;
+    margin-bottom: 24px;
+  }
+
+  .searchInput {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .userTableContainer {
+    display: block;
+  }
+
+  /* Make table rows look like cards on mobile */
+  .userTable thead {
+    display: none;
+  }
+
+  .userTable tbody tr {
+    display: block;
+    background: #fff;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    padding: 10px;
+    border: 1px solid #eee;
+  }
+
+  .userTable td {
+    display: flex;
+    justify-content: flex-start;
+    padding: 8px 6px;
+    border: none;
+    font-size: 15px;
+  }
+
+  .userTable td::before {
+    content: attr(data-label) ": ";
+    font-weight: 600;
+    color: #555;
+    margin-right: 8px;
+  }
+
+  .actionButton {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  /* Modal full screen on mobile */
+  .modalOverlay {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal {
+    width: auto;
+    height: 87%;
+    max-width: 85%;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 14px;
+  }
+
+  .closeButton {
+    top: 12px;
+    right: 12px;
+  }
+
+  .empruntList {
+    max-height: 240px;
+  }
+}
+
+@media (max-width: 420px) {
+  .userTable td {
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .userTable td::before {
+    display: block;
+    margin-bottom: 4px;
+  }
+}
