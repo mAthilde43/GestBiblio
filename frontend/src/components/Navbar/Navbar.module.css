@@ -2,14 +2,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 3rem;
+  padding: 12px 48px;
   /* background-color: #ffffff; */
   /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
 }
 
 .logo img {
-  height: 90px;
-  margin: -10px;
+  height: 72px;
+  margin: -6px;
 }
 
 .navLinks {
@@ -19,6 +19,24 @@
   align-items: center;
   font-size: 18px;
   margin: 10px 0 10px 0;
+}
+
+/* Hamburger button - hidden on desktop */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  margin-left: 12px;
+}
+.bar {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #333;
+  margin: 4px 0;
+  transition: all 0.2s ease;
 }
 
 .navLinks li a {
@@ -47,4 +65,57 @@
 }
 .logoutButton:hover {
   color: #9e8c78;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 8px;
+    position: relative;
+    align-items: center;
+  }
+
+  .logo img {
+    height: 56px;
+    margin: 0;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  /* Hide desktop nav */
+  .navLinks {
+    display: none;
+    position: absolute;
+    top: 65%;
+    right: 16px;
+    background: #9e8c78;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    flex-direction: column;
+    gap: 0;
+    padding: 8px 0;
+    min-width: 180px;
+    z-index: 50;
+  }
+
+  /* When open, show as column */
+  .navLinks.open {
+    display: flex;
+  }
+
+  .navLinks li {
+    padding: 8px 16px;
+  }
+
+  .navLinks li a {
+    color: white;
+    display: block;
+  }
+
+  .logoutButton {
+    margin: 0;
+    padding-left: 8px;
+  }
 }

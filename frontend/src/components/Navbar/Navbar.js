@@ -4,10 +4,11 @@ import Logo from "../../assets/images/logoBooklyst.png";
 import { AuthContext } from "../../contexts/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 const Navbar = () => {
   const { user, token, logout } = useContext(AuthContext);
+  const [open, setOpen] = useState(false);
 
   const isLoggedIn = !!token && !!user;
   console.log("Navbar user:", user);
@@ -20,7 +21,21 @@ const Navbar = () => {
           <img src={Logo} alt="Logo" />
         </Link>
       </div>
-      <ul className={classes.navLinks}>
+      <button
+        className={classes.hamburger}
+        aria-label={open ? "Close menu" : "Open menu"}
+        aria-expanded={open}
+        aria-controls="primary-navigation"
+        onClick={() => setOpen((v) => !v)}
+      >
+        <span className={classes.bar} />
+        <span className={classes.bar} />
+        <span className={classes.bar} />
+      </button>
+      <ul
+        className={`${classes.navLinks} ${open ? classes.open : ""}`}
+        id="primary-navigation"
+      >
         {isAdmin && (
           <li>
             <Link to="/users">Utilisateurs</Link>
@@ -46,13 +61,23 @@ const Navbar = () => {
         <li>
           {isLoggedIn ? (
             <>
-              <Link to="/account">Mon compte</Link>
-              <button onClick={logout} className={classes.logoutButton}>
+              <Link to="/account" onClick={() => setOpen(false)}>
+                Mon compte
+              </Link>
+              <button
+                onClick={() => {
+                  logout();
+                  setOpen(false);
+                }}
+                className={classes.logoutButton}
+              >
                 <FontAwesomeIcon icon={faRightFromBracket} />
               </button>
             </>
           ) : (
-            <Link to="/auth/login">Se connecter</Link>
+            <Link to="/auth/login" onClick={() => setOpen(false)}>
+              Se connecter
+            </Link>
           )}
         </li>
       </ul>
