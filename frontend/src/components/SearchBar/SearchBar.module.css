@@ -50,7 +50,9 @@
   font-weight: 600;
   color: #9e8c78;
   text-decoration: none;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
   cursor: pointer;
 }
 
@@ -74,4 +76,46 @@
 
 .resetButton:hover {
   color: #333;
+}
+
+/* Mobile: keep search fields side-by-side (horizontal) and allow horizontal scroll if needed */
+@media (max-width: 768px) {
+  .searchContainer {
+    width: 95%;
+    margin: 12px auto;
+    background-color: #9e8c78;
+    border-radius: 28px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .input,
+  .select,
+  .addButton {
+    flex: 0 0 auto;
+    width: 0;
+    min-width: 100px;
+    height: auto;
+    padding: 8px 12px;
+    border-radius: 18px;
+    font-size: 14px;
+  }
+
+  .addButton {
+    justify-content: center;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: transparent;
+  }
+
+  /* If there's a reset button, keep it visible but compact */
+  .resetButton {
+    align-self: center;
+  }
 }
