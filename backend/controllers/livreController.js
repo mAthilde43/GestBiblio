@@ -27,15 +27,15 @@ const create = async (req, res) => {
     console.log("req.body:", req.body);
     console.log("req.file:", req.file);
 
-  const { titre, date_parution, description, id_theme, auteur } = req.body;
-    const image_url = req.file ? `/uploads/${req.file.filename}` : null;
+    const { titre, date_parution, description, id_theme, auteur } = req.body;
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
     // Créer le livre
     const newLivre = await livreService.createLivre({
       titre,
       date_parution,
       description,
-      image_url,
+      imageUrl,
     });
 
     // Ajouter le(s) thème(s) si sélectionné(s)
@@ -72,13 +72,13 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   try {
     const { titre, date_parution, description, id_theme, auteur } = req.body;
-    const image_url = req.file ? `/uploads/${req.file.filename}` : undefined;
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : undefined;
 
     const updatedLivre = await livreService.updateLivre(req.params.id, {
       titre,
       date_parution,
       description,
-      image_url,
+      imageUrl,
     });
 
     // Mettre à jour le(s) thème(s) si présent(s)

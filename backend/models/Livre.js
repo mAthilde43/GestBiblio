@@ -18,11 +18,7 @@ const Livre = sequelize.define("Livre", {
   description: {
     type: DataTypes.TEXT,
   },
-  // disponibilite: {
-  //   type: DataTypes.BOOLEAN,
-  //   defaultValue: true,
-  // },
-  image_url: {
+  imageUrl: {
     type: DataTypes.STRING,
     allowNull: true,
   },

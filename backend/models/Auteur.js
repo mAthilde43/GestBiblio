@@ -12,10 +12,6 @@ const Auteur = sequelize.define("Auteur", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  // prenom: {
-  //   type: DataTypes.STRING,
-  //   allowNull: false,
-  // },
 });
 
 module.exports = Auteur;

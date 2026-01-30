@@ -17,22 +17,22 @@ const Emprunt = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    date_emprunt: {
+    dateEmprunt: {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    date_retour_prevu: {
+    dateRetourPrevu: {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    date_retour_effectif: {
+    dateRetourEffectif: {
       type: DataTypes.DATE,
       allowNull: true,
     },
   },
   {
     timestamps: false,
-  }
+  },
 );
 
 module.exports = Emprunt;

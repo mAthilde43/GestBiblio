@@ -4,8 +4,8 @@ import classes from "./CardEmprunt.module.css";
 const CardEmprunt = ({ livre, emprunt, onRendre }) => {
   console.log("Livre reçu dans CARDEMPRUNT:", livre);
 
-  const dateEmprunt = new Date(emprunt.date_emprunt);
-  const dateRetourPrevu = new Date(emprunt.date_retour_prevu);
+  const dateEmprunt = new Date(emprunt.dateEmprunt);
+  const dateRetourPrevu = new Date(emprunt.dateRetourPrevu);
 
   const auteur =
     livre.Auteurs && livre.Auteurs.length > 0
@@ -17,8 +17,8 @@ const CardEmprunt = ({ livre, emprunt, onRendre }) => {
       <div className={classes.imageWrapper}>
         <img
           src={
-            livre.image_url
-              ? `${process.env.REACT_APP_API_URL}${livre.image_url}`
+            livre.imageUrl
+              ? `${process.env.REACT_APP_API_URL}${livre.imageUrl}`
               : "/placeholder.jpg"
           }
           alt={livre.titre}

@@ -4,12 +4,8 @@ const { Emprunt } = require("../models");
 
 const emprunter = async (req, res) => {
   try {
-    const { id_livre, date_retour_prevu } = req.body;
-    await empruntService.emprunter(
-      req.user.id_user,
-      id_livre,
-      date_retour_prevu
-    );
+    const { id_livre, dateRetourPrevu } = req.body;
+    await empruntService.emprunter(req.user.id_user, id_livre, dateRetourPrevu);
     res.status(201).json({ message: "Livre emprunté" });
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -50,13 +46,13 @@ const emprunterPourUser = async (req, res) => {
   console.log("🟢 emprunterPourUser appelé", req.body);
 
   try {
-    const { id_user, id_livre, date_retour_prevu } = req.body;
+    const { id_user, id_livre, dateRetourPrevu } = req.body;
 
     if (!id_user) {
       return res.status(400).json({ message: "id_user manquant" });
     }
 
-    await empruntService.emprunter(id_user, id_livre, date_retour_prevu);
+    await empruntService.emprunter(id_user, id_livre, dateRetourPrevu);
 
     res.status(201).json({ message: "Livre emprunté pour l'utilisateur" });
   } catch (err) {
@@ -68,8 +64,8 @@ const rendreParEmprunt = async (req, res) => {
   const { id_emprunt } = req.params;
 
   const updated = await Emprunt.update(
-    { date_retour_effectif: new Date() },
-    { where: { id_emprunt, date_retour_effectif: null } }
+    { dateRetourEffectif: new Date() },
+    { where: { id_emprunt, dateRetourEffectif: null } },
   );
 
   if (updated[0] === 0) {

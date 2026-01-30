@@ -30,8 +30,8 @@ const Emprunter = () => {
       const data = await res.json();
 
       // tri : en cours vs historique
-      const enCours = data.filter((e) => !e.date_retour_effectif);
-      const hist = data.filter((e) => e.date_retour_effectif);
+      const enCours = data.filter((e) => !e.dateRetourEffectif);
+      const hist = data.filter((e) => e.dateRetourEffectif);
 
       setEmpruntsEnCours(enCours);
       setHistorique(hist);

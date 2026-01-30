@@ -9,7 +9,7 @@ const User = sequelize.define("User", {
     primaryKey: true,
     allowNull: false,
   },
-  card_number: {
+  cardNumber: {
     type: DataTypes.STRING,
     allowNull: true,
   },
@@ -46,8 +46,8 @@ const User = sequelize.define("User", {
 });
 
 User.afterCreate(async (user, options) => {
-  if (!user.card_number) {
-    user.card_number = user.id_user.toString();
+  if (!user.cardNumber) {
+    user.cardNumber = user.id_user.toString();
     await user.save({ hooks: false });
   }
 });

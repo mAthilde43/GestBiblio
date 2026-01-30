@@ -35,7 +35,7 @@ const LivreDetails = () => {
       .then((res) => res.json())
       .then((data) => {
         const empruntLivre = data.find(
-          (e) => e.id_livre === Number(id) && !e.date_retour_effectif
+          (e) => e.id_livre === Number(id) && !e.dateRetourEffectif,
         );
         setEmprunt(empruntLivre || null);
       })
@@ -117,14 +117,14 @@ const LivreDetails = () => {
         },
         body: JSON.stringify({
           id_livre: Number(id),
-          date_retour_prevu: dateRetour,
+          dateRetourPrevu: dateRetour,
         }),
       });
 
       setEmprunt({
         id_livre: Number(id),
-        date_emprunt: new Date(),
-        date_retour_prevu: dateRetour,
+        dateEmprunt: new Date(),
+        dateRetourPrevu: dateRetour,
       });
 
       navigate("/emprunter", { state: { livre } });
@@ -171,8 +171,8 @@ const LivreDetails = () => {
       <div className={styles.contentWrapper}>
         <img
           src={
-            livre.image_url
-              ? `${process.env.REACT_APP_API_URL}${livre.image_url}`
+            livre.imageUrl
+              ? `${process.env.REACT_APP_API_URL}${livre.imageUrl}`
               : "/placeholder.jpg"
           }
           alt={livre.titre}
@@ -213,9 +213,9 @@ const LivreDetails = () => {
             {emprunt ? (
               <button className={styles.actionBtn} onClick={handleRendre}>
                 Rendre — emprunté le{" "}
-                {new Date(emprunt.date_emprunt).toLocaleDateString()} (retour
+                {new Date(emprunt.dateEmprunt).toLocaleDateString()} (retour
                 prévu le{" "}
-                {new Date(emprunt.date_retour_prevu).toLocaleDateString()})
+                {new Date(emprunt.dateRetourPrevu).toLocaleDateString()})
               </button>
             ) : empruntGlobal ? (
               <button className={styles.actionBtn} disabled>

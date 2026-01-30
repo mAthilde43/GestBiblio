@@ -3,8 +3,8 @@ import classes from "./CardHistorique.module.css";
 
 const CardHistorique = ({ emprunt }) => {
   const livre = emprunt.Livre;
-  const dateEmprunt = new Date(emprunt.date_emprunt);
-  const dateRetour = new Date(emprunt.date_retour_effectif);
+  const dateEmprunt = new Date(emprunt.dateEmprunt);
+  const dateRetour = new Date(emprunt.dateRetourEffectif);
 
   const auteur =
     livre?.Auteurs && livre.Auteurs.length > 0
@@ -16,8 +16,8 @@ const CardHistorique = ({ emprunt }) => {
       <div className={classes.imageWrapper}>
         <img
           src={
-            livre?.image_url
-              ? `${process.env.REACT_APP_API_URL}${livre.image_url}`
+            livre?.imageUrl
+              ? `${process.env.REACT_APP_API_URL}${livre.imageUrl}`
               : "/placeholder.jpg"
           }
           alt={livre?.titre}

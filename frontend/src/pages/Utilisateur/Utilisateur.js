@@ -21,7 +21,7 @@ const Utilisateur = () => {
           (l) =>
             !users.some((u) =>
               (u.emprunts || []).some(
-                (e) => e.id_livre === l.id_livre && !e.date_retour_effectif,
+                (e) => e.id_livre === l.id_livre && !e.dateRetourEffectif,
               ),
             ),
         ),
@@ -122,7 +122,7 @@ const Utilisateur = () => {
           body: JSON.stringify({
             id_livre: Number(selectedLivre),
             id_user: selectedUser.id_user,
-            date_retour_prevu: dateRetour,
+            dateRetourPrevu: dateRetour,
           }),
         },
       );
@@ -183,7 +183,7 @@ const Utilisateur = () => {
           <tbody>
             {filteredUsers.map((user) => {
               const nonRendus = (user.emprunts || []).filter(
-                (e) => !e.date_retour_effectif,
+                (e) => !e.dateRetourEffectif,
               );
               return (
                 <tr key={user.id_user}>
@@ -225,16 +225,15 @@ const Utilisateur = () => {
               <div className={classes.section}>
                 <h3>Emprunts en cours</h3>
                 {(selectedUser.emprunts || []).filter(
-                  (e) => !e.date_retour_effectif,
+                  (e) => !e.dateRetourEffectif,
                 ).length === 0 ? (
                   <p>Aucun emprunt en cours</p>
                 ) : (
                   <ul className={classes.empruntList}>
                     {selectedUser.emprunts
-                      .filter((e) => !e.date_retour_effectif)
+                      .filter((e) => !e.dateRetourEffectif)
                       .map((e, idx) => {
-                        const isLate =
-                          new Date(e.date_retour_prevu) < new Date();
+                        const isLate = new Date(e.dateRetourPrevu) < new Date();
                         return (
                           <li
                             key={idx}
@@ -247,13 +246,11 @@ const Utilisateur = () => {
 
                             <div>
                               Date emprunt:{" "}
-                              {new Date(e.date_emprunt).toLocaleDateString()}
+                              {new Date(e.dateEmprunt).toLocaleDateString()}
                             </div>
                             <div>
                               Date retour prévu:{" "}
-                              {new Date(
-                                e.date_retour_prevu,
-                              ).toLocaleDateString()}
+                              {new Date(e.dateRetourPrevu).toLocaleDateString()}
                             </div>
                             <button
                               className={classes.returnBook}
@@ -294,28 +291,28 @@ const Utilisateur = () => {
               <div className={classes.section}>
                 <h3>Livres rendus</h3>
                 {(selectedUser.emprunts || []).filter(
-                  (e) => e.date_retour_effectif,
+                  (e) => e.dateRetourEffectif,
                 ).length === 0 ? (
                   <p>Aucun livre rendu</p>
                 ) : (
                   <ul className={classes.empruntList}>
                     {selectedUser.emprunts
-                      .filter((e) => e.date_retour_effectif)
+                      .filter((e) => e.dateRetourEffectif)
                       .map((e, idx) => (
                         <li key={idx} className={classes.empruntItem}>
                           <strong>{e.titre || "Titre inconnu"}</strong>
                           <div>
                             Date emprunt:{" "}
-                            {new Date(e.date_emprunt).toLocaleDateString()}
+                            {new Date(e.dateEmprunt).toLocaleDateString()}
                           </div>
                           <div>
                             Date retour prévu:{" "}
-                            {new Date(e.date_retour_prevu).toLocaleDateString()}
+                            {new Date(e.dateRetourPrevu).toLocaleDateString()}
                           </div>
                           <div>
                             Date retour effectif:{" "}
                             {new Date(
-                              e.date_retour_effectif,
+                              e.dateRetourEffectif,
                             ).toLocaleDateString()}
                           </div>
                         </li>

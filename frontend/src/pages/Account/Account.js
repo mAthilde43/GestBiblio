@@ -26,12 +26,12 @@ const Account = () => {
           `${process.env.REACT_APP_API_URL}/users/me`,
           {
             headers: { Authorization: `Bearer ${token}` },
-          }
+          },
         );
 
         if (!response.ok) {
           throw new Error(
-            "Erreur lors de la récupération du profil utilisateur"
+            "Erreur lors de la récupération du profil utilisateur",
           );
         }
 
@@ -71,7 +71,7 @@ const Account = () => {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(formData),
-        }
+        },
       );
 
       if (!response.ok) {
@@ -165,7 +165,7 @@ const Account = () => {
 
           {/* CARD NUMBER */}
           <p>
-            <strong>Numéro de carte :</strong> {currentUser.card_number}
+            <strong>Numéro de carte :</strong> {currentUser.cardNumber}
           </p>
 
           {/* BOUTON MODIFIER */}

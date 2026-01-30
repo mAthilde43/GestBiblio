@@ -1,12 +1,12 @@
 const empruntRepo = require("../repositories/empruntRepository");
 const { Livre, Emprunt } = require("../models");
 
-const emprunter = async (id_user, id_livre, date_retour_prevu) => {
+const emprunter = async (id_user, id_livre, dateRetourPrevu) => {
   // Vérifier si le livre est déjà emprunté par quelqu'un
   const empruntActif = await Emprunt.findOne({
     where: {
       id_livre,
-      date_retour_effectif: null,
+      dateRetourEffectif: null,
     },
   });
 
@@ -15,8 +15,8 @@ const emprunter = async (id_user, id_livre, date_retour_prevu) => {
   await empruntRepo.emprunterLivre({
     id_user,
     id_livre,
-    date_emprunt: new Date(),
-    date_retour_prevu,
+    dateEmprunt: new Date(),
+    dateRetourPrevu,
   });
 };
 

@@ -31,7 +31,7 @@ const Card = ({ livre, onDelete, userRole, favorisList, onFavoriChange }) => {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
         if (!res.ok) throw new Error("Erreur suppression");
@@ -57,7 +57,7 @@ const Card = ({ livre, onDelete, userRole, favorisList, onFavoriChange }) => {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         setIsFavori(false);
         onFavoriChange?.(livre.id_livre, false);
@@ -84,8 +84,8 @@ const Card = ({ livre, onDelete, userRole, favorisList, onFavoriChange }) => {
       <div className={classes.imageWrapper}>
         <img
           src={
-            livre.image_url
-              ? `${process.env.REACT_APP_API_URL}${livre.image_url}`
+            livre.imageUrl
+              ? `${process.env.REACT_APP_API_URL}${livre.imageUrl}`
               : "/placeholder.jpg"
           }
           alt={livre.titre}

@@ -15,7 +15,7 @@ const updateLivre = async (id, data) => {
     titre: data.titre,
     date_parution: data.date_parution,
     description: data.description,
-    ...(data.image_url && { image_url: data.image_url }),
+    ...(data.imageUrl && { imageUrl: data.imageUrl }),
   });
 
   return livre; // retourne l'instance Sequelize complète

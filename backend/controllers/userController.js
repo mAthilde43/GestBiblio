@@ -28,9 +28,9 @@ const getAllUsers = async (req, res) => {
           id_emprunt: e.id_emprunt,
           id_livre: e.id_livre,
           titre: e.Livre.titre || "Inconnu",
-          date_emprunt: e.date_emprunt,
-          date_retour_prevu: e.date_retour_prevu,
-          date_retour_effectif: e.date_retour_effectif,
+          dateEmprunt: e.dateEmprunt,
+          dateRetourPrevu: e.dateRetourPrevu,
+          dateRetourEffectif: e.dateRetourEffectif,
         })) || [];
 
       return {
