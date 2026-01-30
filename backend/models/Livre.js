@@ -29,7 +29,7 @@ const Livre = sequelize.define(
     },
   },
   {
-    timestamps: false,
+    timestamps: true,
     tableName: "Livres",
     underscored: false,
   },
