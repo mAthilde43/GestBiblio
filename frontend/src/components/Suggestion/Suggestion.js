@@ -12,6 +12,30 @@ const Suggestion = () => {
   const [favorisList, setFavorisList] = useState([]);
   const { user, token } = useContext(AuthContext);
 
+  // control how many slides to show based on current window width
+  const [slidesToShowState, setSlidesToShowState] = useState(() => {
+    if (typeof window === "undefined") return 4;
+    const w = window.innerWidth;
+    if (w <= 600) return 2;
+    if (w <= 768) return 2;
+    if (w <= 1024) return 3;
+    return 4;
+  });
+
+  useEffect(() => {
+    function update() {
+      const w = window.innerWidth;
+      if (w <= 600) setSlidesToShowState(2);
+      else if (w <= 768) setSlidesToShowState(2);
+      else if (w <= 1024) setSlidesToShowState(3);
+      else setSlidesToShowState(4);
+    }
+
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
   const userRole = user?.id_role;
 
   // Récupération de tous les livres
@@ -37,7 +61,7 @@ const Suggestion = () => {
     setFavorisList((prev) =>
       isFavori
         ? [...prev, livres.find((l) => l.id_livre === id_livre)]
-        : prev.filter((f) => f.id_livre !== id_livre)
+        : prev.filter((f) => f.id_livre !== id_livre),
     );
   };
 
@@ -52,16 +76,14 @@ const Suggestion = () => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: slidesToShowState,
     slidesToScroll: 1,
     arrows: true,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
-    responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
-      { breakpoint: 480, settings: { slidesToShow: 1 } },
-    ],
+    variableWidth: false,
+    centerMode: false,
+    // responsive handled via JS resize listener to avoid conflicts with inline styles
   };
 
   return (

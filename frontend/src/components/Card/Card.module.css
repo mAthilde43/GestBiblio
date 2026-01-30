@@ -40,6 +40,27 @@
   margin: 20px 10px;
 }
 
+/* Card responsive tweaks */
+@media (max-width: 768px) {
+  .card {
+    width: 160px;
+  }
+
+  .imageWrapper img {
+    height: 150px;
+  }
+
+  .info h3 {
+    font-size: 18px;
+    margin: 8px;
+  }
+
+  .auteur {
+    font-size: 15px;
+    margin: 12px 8px;
+  }
+}
+
 /* --- Boutons --- */
 .actions {
   display: flex;

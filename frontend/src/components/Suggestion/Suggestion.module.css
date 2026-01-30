@@ -7,3 +7,73 @@
   margin-bottom: 20px;
   color: #9e8c78;
 }
+
+/* Responsive adjustments for suggestions */
+@media (max-width: 1024px) {
+  .suggestionContainer {
+    padding: 20px 48px;
+    width: 86%;
+  }
+
+  .suggestionTitle {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 768px) {
+  .suggestionContainer {
+    padding: 16px 16px;
+  }
+
+  .suggestionTitle {
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  /* ensure the slick slider padding doesn't cause overflow */
+  .suggestionContainer .slick-slider {
+    padding-bottom: 8px;
+  }
+
+  /* center slides inside the track on mobile */
+  .suggestionContainer .slick-track {
+    justify-content: center !important;
+  }
+
+  /* position arrows closer to edges on mobile */
+  .suggestionContainer .slick-prev,
+  .suggestionContainer .slick-next {
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+
+  .suggestionContainer .slick-prev {
+    left: 10px !important;
+  }
+
+  .suggestionContainer .slick-next {
+    right: 10px !important;
+  }
+}
+
+/* Add small horizontal padding to each slide to avoid visual overlap */
+.suggestionContainer .slick-slide {
+  padding: 0 6px;
+}
+
+/* Force two slides visible on small screens by overriding slick inline widths */
+@media (max-width: 768px) {
+  .suggestionContainer .slick-track {
+    display: flex !important;
+  }
+
+  .suggestionContainer .slick-slide {
+    width: calc(50% - 12px) !important;
+    display: block;
+  }
+
+  .suggestionContainer .slick-list {
+    overflow: hidden;
+  }
+}
