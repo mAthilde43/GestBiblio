@@ -8,11 +8,34 @@ export const AuthProvider = ({ children }) => {
 
   // Vérifie si un token est stocké dans le localStorage au chargement
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+    try {
+      const storedToken = localStorage.getItem("token");
+      const storedUser = localStorage.getItem("user");
+
+      // Vérifier que les valeurs existent et ne sont pas "undefined" ou "null" en string
+      if (
+        storedToken &&
+        storedToken !== "undefined" &&
+        storedToken !== "null"
+      ) {
+        setToken(storedToken);
+      }
+
+      if (storedUser && storedUser !== "undefined" && storedUser !== "null") {
+        const parsedUser = JSON.parse(storedUser);
+        // Vérifier que le parsage a donné un objet valide
+        if (parsedUser && typeof parsedUser === "object") {
+          setUser(parsedUser);
+        }
+      }
+    } catch (error) {
+      console.error(
+        "Erreur lors du chargement des données d'authentification:",
+        error,
+      );
+      // Nettoyer le localStorage en cas d'erreur
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
     }
   }, []);
 

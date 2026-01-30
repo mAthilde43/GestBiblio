@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import classes from "./Utilisateur.module.css";
 
 const Utilisateur = () => {
@@ -11,12 +11,27 @@ const Utilisateur = () => {
   const [livresDisponibles, setLivresDisponibles] = useState([]);
   const [selectedLivre, setSelectedLivre] = useState("");
 
-  // Charger utilisateurs
-  useEffect(() => {
-    fetchUsers();
-    fetchLivres();
-  }, []);
+  // Fetch livres avec useCallback
+  const fetchLivres = useCallback(async () => {
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/livres`);
+      const data = await res.json();
+      setLivresDisponibles(
+        data.filter(
+          (l) =>
+            !users.some((u) =>
+              (u.emprunts || []).some(
+                (e) => e.id_livre === l.id_livre && !e.date_retour_effectif,
+              ),
+            ),
+        ),
+      );
+    } catch (err) {
+      console.error("Erreur chargement livres :", err);
+    }
+  }, [users]);
 
+  // Fetch utilisateurs
   const fetchUsers = async () => {
     setLoading(true);
     try {
@@ -32,24 +47,17 @@ const Utilisateur = () => {
     }
   };
 
-  const fetchLivres = async () => {
-    try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/livres`);
-      const data = await res.json();
-      setLivresDisponibles(
-        data.filter(
-          (l) =>
-            !users.some((u) =>
-              (u.emprunts || []).some(
-                (e) => e.id_livre === l.id_livre && !e.date_retour_effectif
-              )
-            )
-        )
-      );
-    } catch (err) {
-      console.error("Erreur chargement livres :", err);
+  // Charger utilisateurs au montage
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  // Charger livres quand users change
+  useEffect(() => {
+    if (users.length > 0) {
+      fetchLivres();
     }
-  };
+  }, [users, fetchLivres]);
 
   const handleSearch = (e) => {
     const value = e.target.value.toLowerCase();
@@ -60,11 +68,12 @@ const Utilisateur = () => {
           user.nom.toLowerCase().includes(value) ||
           user.email.toLowerCase().includes(value) ||
           (user.emprunts || []).some((e) =>
-            e.titre.toLowerCase().includes(value)
-          )
-      )
+            e.titre.toLowerCase().includes(value),
+          ),
+      ),
     );
   };
+
   const handleReturnBook = async (id_emprunt) => {
     try {
       await fetch(
@@ -74,7 +83,7 @@ const Utilisateur = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
 
       // 🔄 recharger les données
@@ -98,7 +107,7 @@ const Utilisateur = () => {
     if (!selectedLivre) return alert("Sélectionnez un livre");
 
     const dateRetour = new Date(
-      Date.now() + 14 * 24 * 60 * 60 * 1000
+      Date.now() + 14 * 24 * 60 * 60 * 1000,
     ).toISOString();
 
     try {
@@ -115,7 +124,7 @@ const Utilisateur = () => {
             id_user: selectedUser.id_user,
             date_retour_prevu: dateRetour,
           }),
-        }
+        },
       );
 
       if (!res.ok) {
@@ -174,7 +183,7 @@ const Utilisateur = () => {
           <tbody>
             {filteredUsers.map((user) => {
               const nonRendus = (user.emprunts || []).filter(
-                (e) => !e.date_retour_effectif
+                (e) => !e.date_retour_effectif,
               );
               return (
                 <tr key={user.id_user}>
@@ -216,13 +225,12 @@ const Utilisateur = () => {
               <div className={classes.section}>
                 <h3>Emprunts en cours</h3>
                 {(selectedUser.emprunts || []).filter(
-                  (e) => !e.date_retour_effectif
+                  (e) => !e.date_retour_effectif,
                 ).length === 0 ? (
                   <p>Aucun emprunt en cours</p>
                 ) : (
                   <ul className={classes.empruntList}>
                     {selectedUser.emprunts
-
                       .filter((e) => !e.date_retour_effectif)
                       .map((e, idx) => {
                         const isLate =
@@ -244,7 +252,7 @@ const Utilisateur = () => {
                             <div>
                               Date retour prévu:{" "}
                               {new Date(
-                                e.date_retour_prevu
+                                e.date_retour_prevu,
                               ).toLocaleDateString()}
                             </div>
                             <button
@@ -286,7 +294,7 @@ const Utilisateur = () => {
               <div className={classes.section}>
                 <h3>Livres rendus</h3>
                 {(selectedUser.emprunts || []).filter(
-                  (e) => e.date_retour_effectif
+                  (e) => e.date_retour_effectif,
                 ).length === 0 ? (
                   <p>Aucun livre rendu</p>
                 ) : (
@@ -307,7 +315,7 @@ const Utilisateur = () => {
                           <div>
                             Date retour effectif:{" "}
                             {new Date(
-                              e.date_retour_effectif
+                              e.date_retour_effectif,
                             ).toLocaleDateString()}
                           </div>
                         </li>

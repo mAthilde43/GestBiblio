@@ -8,7 +8,7 @@ const LoginPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useContext(AuthContext); // <-- récupère login du contexte
+  const { login } = useContext(AuthContext);
 
   const redirectUrl =
     new URLSearchParams(location.search).get("redirect") || "/";
@@ -19,6 +19,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/auth/login`,
@@ -26,18 +27,25 @@ const LoginPage = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
-        }
+        },
       );
+
       const data = await response.json();
-      console.log("Login response:", data);
+      console.log("Login response status:", response.status);
+      console.log("Login response data:", data);
 
-      // 🔹 met à jour le contexte avec login()
+      // ❌ Vérifier si la réponse est un succès
+      if (!response.ok) {
+        alert(data.message || "Email ou mot de passe incorrect");
+        return;
+      }
+
+      // ✅ Connexion réussie
       login(data.user, data.token);
-
       alert("Connexion réussie !");
-      navigate(redirectUrl); // redirection vers home
+      navigate(redirectUrl);
     } catch (err) {
-      console.error(err);
+      console.error("Erreur complète:", err);
       alert("Erreur lors de la connexion.");
     }
   };
@@ -56,7 +64,6 @@ const LoginPage = () => {
               onChange={handleChange}
               required
             />
-
             <label>Mot de passe</label>
             <input
               type="password"
@@ -65,17 +72,15 @@ const LoginPage = () => {
               onChange={handleChange}
               required
             />
-
             <button type="submit" className={classes.loginBtn}>
               Se connecter
             </button>
           </form>
         </div>
-
         <div className={classes.right}>
           <h1>Bon retour parmi nous !</h1>
           <h2>Connectez-vous pour accéder à toutes les fonctionnalités.</h2>
-          <p>Vous n’avez pas de compte ?</p>
+          <p>Vous n'avez pas de compte ?</p>
           <Link to="/auth/register" className={classes.registerBtn}>
             Inscrivez-vous
           </Link>

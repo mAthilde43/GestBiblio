@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import Slider from "react-slick";
 import { AuthContext } from "../../contexts/AuthContext";
 import { NextArrow, PrevArrow } from "../../components/CustomArrow/CustomArrow";
@@ -18,7 +18,7 @@ const Emprunter = () => {
   // -------------------------------------------------------------
   // FETCH DES EMPRUNTS
   // -------------------------------------------------------------
-  const fetchEmprunts = async () => {
+  const fetchEmprunts = useCallback(async () => {
     if (!token) return;
 
     try {
@@ -41,11 +41,11 @@ const Emprunter = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchEmprunts();
-  }, [token]);
+  }, [fetchEmprunts]);
 
   // -------------------------------------------------------------
   // RENDRE UN LIVRE
@@ -63,7 +63,7 @@ const Emprunter = () => {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ id_livre }),
-        }
+        },
       );
 
       if (!res.ok) {
@@ -141,9 +141,9 @@ const Emprunter = () => {
       )}
 
       {/* ---------------------------------------------------------- */}
-      {/* 🟣 PARTIE 2 — HISTORIQUE D’EMPRUNTS */}
+      {/* 🟣 PARTIE 2 — HISTORIQUE D'EMPRUNTS */}
       {/* ---------------------------------------------------------- */}
-      <h2 style={{ marginTop: "60px" }}>Mon historique d’emprunts</h2>
+      <h2 style={{ marginTop: "60px" }}>Mon historique d'emprunts</h2>
 
       {historique.length === 0 ? (
         <p>Aucun historique pour le moment.</p>
