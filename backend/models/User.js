@@ -7,14 +7,14 @@ const User = sequelize.define(
   {
     id_user: {
       type: DataTypes.INTEGER,
-      field: "idUser",
+      // field: "idUser",
       autoIncrement: true,
       primaryKey: true,
       allowNull: false,
     },
     card_number: {
       type: DataTypes.STRING,
-      field: "cardNumber",
+      // field: "cardNumber",
       allowNull: true,
     },
     nom: {
@@ -42,7 +42,7 @@ const User = sequelize.define(
     },
     id_role: {
       type: DataTypes.INTEGER,
-      field: "idRole",
+      // field: "idRole",
       references: {
         model: Role,
         key: "id_role",

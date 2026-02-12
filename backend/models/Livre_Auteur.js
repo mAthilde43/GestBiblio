@@ -6,13 +6,13 @@ const Livre_Auteur = sequelize.define(
   {
     id_livre: {
       type: DataTypes.INTEGER,
-      field: "idLivre",
+      // field: "idLivre",
       primaryKey: true,
       allowNull: false,
     },
     id_auteur: {
       type: DataTypes.INTEGER,
-      field: "idAuteur",
+      // field: "idAuteur",
       primaryKey: true,
       allowNull: false,
     },

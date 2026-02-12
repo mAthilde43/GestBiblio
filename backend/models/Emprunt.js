@@ -6,33 +6,33 @@ const Emprunt = sequelize.define(
   {
     id_emprunt: {
       type: DataTypes.INTEGER,
-      field: "idEmprunt",
+      // field: "idEmprunt",
       autoIncrement: true,
       primaryKey: true,
     },
     id_user: {
       type: DataTypes.INTEGER,
-      field: "idUser",
+      // field: "idUser",
       allowNull: false,
     },
     id_livre: {
       type: DataTypes.INTEGER,
-      field: "idLivre",
+      // field: "idLivre",
       allowNull: false,
     },
     date_emprunt: {
       type: DataTypes.DATE,
-      field: "dateEmprunt",
+      // field: "dateEmprunt",
       allowNull: false,
     },
     date_retour_prevu: {
       type: DataTypes.DATE,
-      field: "dateRetourPrevu",
+      // field: "dateRetourPrevu",
       allowNull: false,
     },
     date_retour_effectif: {
       type: DataTypes.DATE,
-      field: "dateRetourEffectif",
+      // field: "dateRetourEffectif",
       allowNull: true,
     },
   },

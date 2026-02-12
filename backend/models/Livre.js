@@ -6,7 +6,7 @@ const Livre = sequelize.define(
   {
     id_livre: {
       type: DataTypes.INTEGER,
-      field: "idLivre",
+      // field: "idLivre",
       autoIncrement: true,
       primaryKey: true,
       allowNull: false,
@@ -17,14 +17,14 @@ const Livre = sequelize.define(
     },
     date_parution: {
       type: DataTypes.DATE,
-      field: "dateParution",
+      // field: "dateParution",
     },
     description: {
       type: DataTypes.TEXT,
     },
     image_url: {
       type: DataTypes.STRING,
-      field: "imageUrl",
+      // field: "imageUrl",
       allowNull: true,
     },
   },

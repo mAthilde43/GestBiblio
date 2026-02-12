@@ -6,13 +6,13 @@ const Favoris = sequelize.define(
   {
     id_user: {
       type: DataTypes.INTEGER,
-      field: "idUser",
+      // field: "idUser",
       allowNull: false,
       primaryKey: true,
     },
     id_livre: {
       type: DataTypes.INTEGER,
-      field: "idLivre",
+      // field: "idLivre",
       allowNull: false,
       primaryKey: true,
     },

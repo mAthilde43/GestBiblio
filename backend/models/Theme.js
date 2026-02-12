@@ -6,7 +6,7 @@ const Theme = sequelize.define(
   {
     id_theme: {
       type: DataTypes.INTEGER,
-      field: "idTheme",
+      // field: "idTheme",
       autoIncrement: true,
       primaryKey: true,
       allowNull: false,
