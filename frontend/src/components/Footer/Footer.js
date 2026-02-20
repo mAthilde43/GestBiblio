@@ -24,6 +24,14 @@ const Footer = () => {
             <li>
               <a href="/favoris">Favoris</a>
             </li>
+            <li>
+              <a href="/mentions-legales">Mentions légales</a>
+            </li>
+            <li>
+              <a href="/politique-confidentialite">
+                Politique de confidentialité
+              </a>
+            </li>
           </ul>
         </div>
         <div className={classes.right}>

@@ -11,6 +11,8 @@ import Catalogue from "./pages/Catalogue/Catalogue";
 import LivreDetails from "./pages/LivreDetails/LivreDetails";
 import Favoris from "./pages/Favoris/Favoris";
 import Emprunter from "./pages/Emprunter/Emprunter";
+import MentionsLegales from "./pages/MentionsLegales/MentionsLegales";
+import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite/PolitiqueConfidentialite";
 import { AnimatePresence } from "framer-motion";
 
 function App() {
@@ -37,6 +39,11 @@ function App() {
           <Route path="/favoris" element={<Favoris />} />
           <Route path="/emprunter" element={<Emprunter />} />
           <Route path="/edit-book/:id" element={<AddBook editMode={true} />} />
+          <Route path="/mentions-legales" element={<MentionsLegales />} />
+          <Route
+            path="/politique-confidentialite"
+            element={<PolitiqueConfidentialite />}
+          />
         </Routes>
       </AnimatePresence>
     </div>
