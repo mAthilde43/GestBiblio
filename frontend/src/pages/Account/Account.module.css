@@ -67,7 +67,6 @@
 
 .button {
   width: 30%;
-  margin: 20px auto 0 auto;
   padding: 12px 20px;
   background-color: #9e8c78;
   color: white;
@@ -76,7 +75,6 @@
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
-  display: block;
 }
 
 .button:hover {
@@ -103,19 +101,19 @@
 .buttonRow {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 32px;
   margin-top: 20px;
   width: 100%;
 }
 
 /* RGPD: Bouton export données */
 .exportButton {
-  width: 100%;
-  margin: 30px auto 0 auto;
+  width: 30%;
+  margin: 0;
   padding: 12px 20px;
-  background-color: #4a7c59;
-  color: white;
-  border: none;
+  background-color: white;
+  color: #9e8c78;
+  border: 2px solid #9e8c78;
   border-radius: 25px;
   cursor: pointer;
   font-size: 15px;
@@ -125,7 +123,7 @@
 }
 
 .exportButton:hover {
-  background-color: #3d6a4a;
+  background-color: #fbf6f1;
 }
 
 .exportButton:disabled {

@@ -201,14 +201,23 @@ const Account = () => {
             <strong>Numéro de carte :</strong> {currentUser.card_number}
           </p>
 
-          {/* BOUTON MODIFIER */}
+          {/* BOUTONS MODIFIER + EXPORT */}
           {!editMode && (
-            <button
-              className={classes.button}
-              onClick={() => setEditMode(true)}
-            >
-              Modifier
-            </button>
+            <div className={classes.buttonRow}>
+              <button
+                className={classes.button}
+                onClick={() => setEditMode(true)}
+              >
+                Modifier
+              </button>
+              <button
+                className={classes.exportButton}
+                onClick={handleExportData}
+                disabled={exportLoading}
+              >
+                {exportLoading ? "Export en cours..." : "Exporter mes données"}
+              </button>
+            </div>
           )}
 
           {/* BOUTONS ENREGISTRER + ANNULER CÔTE À CÔTÉ */}
@@ -232,19 +241,6 @@ const Account = () => {
                 Annuler
               </button>
             </div>
-          )}
-
-          {/* RGPD: BOUTON EXPORT DONNÉES PDF */}
-          {!editMode && (
-            <button
-              className={classes.exportButton}
-              onClick={handleExportData}
-              disabled={exportLoading}
-            >
-              {exportLoading
-                ? "Export en cours..."
-                : "� Exporter mes données en PDF (RGPD)"}
-            </button>
           )}
         </div>
       </div>
