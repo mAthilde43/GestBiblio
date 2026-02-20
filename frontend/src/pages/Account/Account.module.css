@@ -107,3 +107,28 @@
   margin-top: 20px;
   width: 100%;
 }
+
+/* RGPD: Bouton export données */
+.exportButton {
+  width: 100%;
+  margin: 30px auto 0 auto;
+  padding: 12px 20px;
+  background-color: #4a7c59;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  display: block;
+  transition: background-color 0.3s ease;
+}
+
+.exportButton:hover {
+  background-color: #3d6a4a;
+}
+
+.exportButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

@@ -5,6 +5,7 @@ const userController = require("../controllers/userController");
 const { getAllUsers } = require("../controllers/userController");
 
 router.get("/me", authMiddleware, userController.getCurrentUser);
+router.get("/me/export", authMiddleware, userController.exportUserData); // RGPD: Export données
 router.get("/", getAllUsers);
 router.put("/me", authMiddleware, userController.updateCurrentUser);
 

@@ -18,4 +18,29 @@ const findAllUsers = async () => {
     ],
   });
 };
-module.exports = { findByEmail, createUser, findById, findAllUsers };
+
+// RGPD: Récupérer toutes les données d'un utilisateur pour export
+const findUserWithAllData = async (id_user) => {
+  const { Favoris } = require("../models");
+  return User.findByPk(id_user, {
+    include: [
+      { model: Role },
+      {
+        model: Emprunt,
+        include: [{ model: Livre, attributes: ["id_livre", "titre"] }],
+      },
+      {
+        model: Favoris,
+        include: [{ model: Livre, attributes: ["id_livre", "titre"] }],
+      },
+    ],
+  });
+};
+
+module.exports = {
+  findByEmail,
+  createUser,
+  findById,
+  findAllUsers,
+  findUserWithAllData,
+};

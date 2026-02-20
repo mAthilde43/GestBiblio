@@ -8,6 +8,7 @@ const Account = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [exportLoading, setExportLoading] = useState(false);
 
   const [editMode, setEditMode] = useState(false);
 
@@ -26,12 +27,12 @@ const Account = () => {
           `${process.env.REACT_APP_API_URL}/users/me`,
           {
             headers: { Authorization: `Bearer ${token}` },
-          }
+          },
         );
 
         if (!response.ok) {
           throw new Error(
-            "Erreur lors de la récupération du profil utilisateur"
+            "Erreur lors de la récupération du profil utilisateur",
           );
         }
 
@@ -71,7 +72,7 @@ const Account = () => {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(formData),
-        }
+        },
       );
 
       if (!response.ok) {
@@ -83,6 +84,38 @@ const Account = () => {
       setEditMode(false);
     } catch (err) {
       setError(err.message);
+    }
+  };
+
+  // RGPD: Export des données personnelles en PDF
+  const handleExportData = async () => {
+    setExportLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/users/me/export`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de l'export des données");
+      }
+
+      // Récupérer le PDF en blob
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `mes-donnees-${currentUser.prenom}-${currentUser.nom}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setExportLoading(false);
     }
   };
 
@@ -199,6 +232,19 @@ const Account = () => {
                 Annuler
               </button>
             </div>
+          )}
+
+          {/* RGPD: BOUTON EXPORT DONNÉES PDF */}
+          {!editMode && (
+            <button
+              className={classes.exportButton}
+              onClick={handleExportData}
+              disabled={exportLoading}
+            >
+              {exportLoading
+                ? "Export en cours..."
+                : "� Exporter mes données en PDF (RGPD)"}
+            </button>
           )}
         </div>
       </div>
