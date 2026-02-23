@@ -130,3 +130,31 @@
   background-color: #ccc;
   cursor: not-allowed;
 }
+
+/* RGPD: Bouton suppression compte */
+.deleteButton {
+  width: 30%;
+  margin: 0;
+  padding: 4px 10px;
+  background-color: white;
+  color: #dc3545;
+  border: 2px solid #dc3545;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+.deleteButton:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.deleteButton:disabled {
+  background-color: #ccc;
+  border-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}

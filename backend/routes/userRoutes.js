@@ -6,6 +6,7 @@ const { getAllUsers } = require("../controllers/userController");
 
 router.get("/me", authMiddleware, userController.getCurrentUser);
 router.get("/me/export", authMiddleware, userController.exportUserData); // RGPD: Export données
+router.delete("/me", authMiddleware, userController.deleteCurrentUser); // RGPD: Suppression compte
 router.get("/", getAllUsers);
 router.put("/me", authMiddleware, userController.updateCurrentUser);
 

@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import classes from "./Account.module.css";
 import { AuthContext } from "../../contexts/AuthContext";
 import AvatarProfil from "../../assets/images/AvatarProfil.png";
 
 const Account = () => {
-  const { token } = useContext(AuthContext);
+  const { token, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [exportLoading, setExportLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const [editMode, setEditMode] = useState(false);
 
@@ -87,7 +90,7 @@ const Account = () => {
     }
   };
 
-  // RGPD: Export des données personnelles en PDF
+  // RGPD: Export des données personnelles en JSON
   const handleExportData = async () => {
     setExportLoading(true);
     try {
@@ -102,12 +105,16 @@ const Account = () => {
         throw new Error("Erreur lors de l'export des données");
       }
 
-      // Récupérer le PDF en blob
-      const blob = await response.blob();
+      const data = await response.json();
+
+      // Télécharger le fichier JSON
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: "application/json",
+      });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `mes-donnees-${currentUser.prenom}-${currentUser.nom}.pdf`;
+      link.download = `mes-donnees-${currentUser.prenom}-${currentUser.nom}.json`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -116,6 +123,41 @@ const Account = () => {
       setError(err.message);
     } finally {
       setExportLoading(false);
+    }
+  };
+
+  // RGPD: Supprimer le compte
+  const handleDeleteAccount = async () => {
+    const confirmDelete = window.confirm(
+      "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible et toutes vos données seront supprimées.",
+    );
+
+    if (!confirmDelete) return;
+
+    setDeleteLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/users/me`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(
+          data.message || "Erreur lors de la suppression du compte",
+        );
+      }
+
+      // Déconnexion et redirection
+      logout();
+      navigate("/");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -217,6 +259,16 @@ const Account = () => {
               >
                 {exportLoading ? "Export en cours..." : "Exporter mes données"}
               </button>
+              {/* Bouton supprimer uniquement pour les non-admins */}
+              {currentUser.id_role !== 2 && (
+                <button
+                  className={classes.deleteButton}
+                  onClick={handleDeleteAccount}
+                  disabled={deleteLoading}
+                >
+                  {deleteLoading ? "Suppression..." : "Supprimer mon compte"}
+                </button>
+              )}
             </div>
           )}
 

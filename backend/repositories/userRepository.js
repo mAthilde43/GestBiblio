@@ -37,10 +37,25 @@ const findUserWithAllData = async (id_user) => {
   });
 };
 
+// RGPD: Supprimer un utilisateur et toutes ses donnees associees
+const deleteUserById = async (id_user) => {
+  const { Favoris } = require("../models");
+
+  // Supprimer les favoris de l'utilisateur
+  await Favoris.destroy({ where: { id_user } });
+
+  // Supprimer les emprunts de l'utilisateur
+  await Emprunt.destroy({ where: { id_user } });
+
+  // Supprimer l'utilisateur
+  return User.destroy({ where: { id_user } });
+};
+
 module.exports = {
   findByEmail,
   createUser,
   findById,
   findAllUsers,
   findUserWithAllData,
+  deleteUserById,
 };

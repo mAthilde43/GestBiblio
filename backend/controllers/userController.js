@@ -1,6 +1,5 @@
 const userRepository = require("../repositories/userRepository");
 const { User, Emprunt, Livre } = require("../models");
-const PDFDocument = require("pdfkit");
 
 // Récupérer les infos de l'utilisateur connecté
 const getCurrentUser = async (req, res) => {
@@ -69,7 +68,7 @@ const updateCurrentUser = async (req, res) => {
   }
 };
 
-// RGPD: Exporter toutes les données personnelles de l'utilisateur en PDF
+// RGPD: Exporter toutes les données personnelles de l'utilisateur en JSON
 const exportUserData = async (req, res) => {
   try {
     const user = await userRepository.findUserWithAllData(req.user.id_user);
@@ -80,110 +79,61 @@ const exportUserData = async (req, res) => {
     const userData = user.toJSON();
     delete userData.password;
 
-    // Création du PDF
-    const doc = new PDFDocument({ margin: 50 });
+    // Formatage des données pour l'export RGPD
+    const exportData = {
+      informations_personnelles: {
+        nom: userData.nom,
+        prenom: userData.prenom,
+        email: userData.email,
+        telephone: userData.telephone,
+        numero_carte: userData.card_number,
+        role: userData.Role?.nom || "Non défini",
+        date_inscription: userData.createdAt,
+      },
+      emprunts:
+        userData.Emprunts?.map((emprunt) => ({
+          livre: emprunt.Livre?.titre || "Inconnu",
+          date_emprunt: emprunt.date_emprunt,
+          date_retour_prevu: emprunt.date_retour_prevu,
+          date_retour_effectif: emprunt.date_retour_effectif,
+        })) || [],
+      favoris:
+        userData.Favoris?.map((favori) => ({
+          livre: favori.Livre?.titre || "Inconnu",
+        })) || [],
+      date_export: new Date().toISOString(),
+    };
 
-    // Configuration des headers pour le téléchargement
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename=mes-donnees-${userData.prenom}-${userData.nom}.pdf`,
-    );
-
-    // Pipe le PDF vers la réponse
-    doc.pipe(res);
-
-    // En-tête du document
-    doc
-      .fontSize(24)
-      .fillColor("#9e8c78")
-      .text("Export de mes données personnelles", {
-        align: "center",
-      });
-    doc.moveDown();
-    doc
-      .fontSize(10)
-      .fillColor("#666")
-      .text(`Export RGPD - Book'Lyst`, { align: "center" });
-    doc
-      .fontSize(10)
-      .text(`Date d'export : ${new Date().toLocaleDateString("fr-FR")}`, {
-        align: "center",
-      });
-    doc.moveDown(2);
-
-    // Section Informations personnelles
-    doc.fontSize(16).fillColor("#9e8c78").text("Informations personnelles");
-    doc.moveDown(0.5);
-    doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke("#ddd");
-    doc.moveDown(0.5);
-
-    doc.fontSize(11).fillColor("#333");
-    doc.text(`Nom : ${userData.nom}`);
-    doc.text(`Prénom : ${userData.prenom}`);
-    doc.text(`Email : ${userData.email}`);
-    doc.text(`Téléphone : ${userData.telephone || "Non renseigné"}`);
-    doc.text(`Numéro de carte : ${userData.card_number || "Non attribué"}`);
-    doc.text(`Rôle : ${userData.Role?.nom || "Non défini"}`);
-    doc.text(
-      `Date d'inscription : ${new Date(userData.createdAt).toLocaleDateString("fr-FR")}`,
-    );
-    doc.moveDown(2);
-
-    // Section Emprunts
-    doc.fontSize(16).fillColor("#9e8c78").text("Historique des emprunts");
-    doc.moveDown(0.5);
-    doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke("#ddd");
-    doc.moveDown(0.5);
-
-    const emprunts = userData.Emprunts || [];
-    if (emprunts.length === 0) {
-      doc.fontSize(11).fillColor("#666").text("Aucun emprunt enregistré.");
-    } else {
-      emprunts.forEach((emprunt, index) => {
-        doc.fontSize(11).fillColor("#333");
-        doc.text(`${index + 1}. ${emprunt.Livre?.titre || "Livre inconnu"}`);
-        doc.fontSize(10).fillColor("#666");
-        doc.text(
-          `   Emprunté le : ${new Date(emprunt.date_emprunt).toLocaleDateString("fr-FR")} | Retour prévu : ${new Date(emprunt.date_retour_prevu).toLocaleDateString("fr-FR")}${emprunt.date_retour_effectif ? ` | Retourné le : ${new Date(emprunt.date_retour_effectif).toLocaleDateString("fr-FR")}` : " | Non retourné"}`,
-        );
-        doc.moveDown(0.3);
-      });
-    }
-    doc.moveDown(2);
-
-    // Section Favoris
-    doc.fontSize(16).fillColor("#9e8c78").text("Mes favoris");
-    doc.moveDown(0.5);
-    doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke("#ddd");
-    doc.moveDown(0.5);
-
-    const favoris = userData.Favoris || [];
-    if (favoris.length === 0) {
-      doc.fontSize(11).fillColor("#666").text("Aucun favori enregistré.");
-    } else {
-      favoris.forEach((favori, index) => {
-        doc.fontSize(11).fillColor("#333");
-        doc.text(`${index + 1}. ${favori.Livre?.titre || "Livre inconnu"}`);
-      });
-    }
-
-    // Pied de page
-    doc.moveDown(3);
-    doc
-      .fontSize(9)
-      .fillColor("#999")
-      .text(
-        "Ce document a été généré conformément au Règlement Général sur la Protection des Données (RGPD). " +
-          "Vous avez le droit d'accéder, de rectifier et de supprimer vos données personnelles.",
-        { align: "center" },
-      );
-
-    // Finaliser le PDF
-    doc.end();
+    res.json(exportData);
   } catch (err) {
     console.error("Erreur export RGPD:", err);
     res.status(500).json({ message: "Erreur lors de l'export des données" });
+  }
+};
+
+// RGPD: Supprimer le compte de l'utilisateur connecté
+const deleteCurrentUser = async (req, res) => {
+  try {
+    const user = await userRepository.findById(req.user.id_user);
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    // Vérifier si l'utilisateur est admin (id_role = 2)
+    if (user.id_role === 2) {
+      return res.status(403).json({
+        message: "Les administrateurs ne peuvent pas supprimer leur compte",
+      });
+    }
+
+    await userRepository.deleteUserById(req.user.id_user);
+
+    res.json({ message: "Compte supprimé avec succès" });
+  } catch (err) {
+    console.error("Erreur suppression compte:", err);
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la suppression du compte" });
   }
 };
 
@@ -192,4 +142,5 @@ module.exports = {
   getAllUsers,
   updateCurrentUser,
   exportUserData,
+  deleteCurrentUser,
 };
