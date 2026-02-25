@@ -123,6 +123,31 @@ input:focus {
   margin: -20px 0 20px 20px;
 }
 
+/* Critères de mot de passe */
+.passwordCriteria {
+  background-color: #f5f0eb;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: -16px 0 16px 0;
+  border: 1px solid #e0d6cc;
+}
+
+.passwordCriteria p {
+  margin: 4px 0;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.valid {
+  color: #2e7d32;
+}
+
+.invalid {
+  color: #c62828;
+}
+
 /* Mobile: empilement vertical et bloc coloré au dessus */
 @media (max-width: 768px) {
   .container {

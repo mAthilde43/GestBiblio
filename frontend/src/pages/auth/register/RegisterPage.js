@@ -13,16 +13,48 @@ const RegisterPage = () => {
   });
 
   const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordStrength, setPasswordStrength] = useState({
+    minLength: false,
+    hasUpperCase: false,
+    hasLowerCase: false,
+    hasNumber: false,
+    hasSpecialChar: false,
+  });
+
+  // Validation du mot de passe
+  const validatePassword = (password) => {
+    const strength = {
+      minLength: password.length >= 8,
+      hasUpperCase: /[A-Z]/.test(password),
+      hasLowerCase: /[a-z]/.test(password),
+      hasNumber: /[0-9]/.test(password),
+      hasSpecialChar: /[!@#$%^&*(),.?":{}|<>_\-+=[\]\\;'/`~]/.test(password),
+    };
+    setPasswordStrength(strength);
+    return Object.values(strength).every((v) => v);
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     if (e.target.name === "email") {
       setEmailError("");
     }
+    if (e.target.name === "password") {
+      validatePassword(e.target.value);
+      setPasswordError("");
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Vérifier la force du mot de passe avant soumission
+    if (!validatePassword(formData.password)) {
+      setPasswordError("Le mot de passe ne respecte pas tous les critères.");
+      return;
+    }
+
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/auth/register`,
@@ -30,7 +62,7 @@ const RegisterPage = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...formData, id_role: 1 }), //role par défaut : utilisateur
-        }
+        },
       );
       const data = await response.json();
 
@@ -112,6 +144,53 @@ const RegisterPage = () => {
               onChange={handleChange}
               required
             />
+            {formData.password && (
+              <div className={classes.passwordCriteria}>
+                <p
+                  className={
+                    passwordStrength.minLength ? classes.valid : classes.invalid
+                  }
+                >
+                  {passwordStrength.minLength ? "✓" : "✗"} Au moins 8 caractères
+                </p>
+                <p
+                  className={
+                    passwordStrength.hasUpperCase
+                      ? classes.valid
+                      : classes.invalid
+                  }
+                >
+                  {passwordStrength.hasUpperCase ? "✓" : "✗"} Une majuscule
+                </p>
+                <p
+                  className={
+                    passwordStrength.hasLowerCase
+                      ? classes.valid
+                      : classes.invalid
+                  }
+                >
+                  {passwordStrength.hasLowerCase ? "✓" : "✗"} Une minuscule
+                </p>
+                <p
+                  className={
+                    passwordStrength.hasNumber ? classes.valid : classes.invalid
+                  }
+                >
+                  {passwordStrength.hasNumber ? "✓" : "✗"} Un chiffre
+                </p>
+                <p
+                  className={
+                    passwordStrength.hasSpecialChar
+                      ? classes.valid
+                      : classes.invalid
+                  }
+                >
+                  {passwordStrength.hasSpecialChar ? "✓" : "✗"} Un caractère
+                  spécial
+                </p>
+              </div>
+            )}
+            {passwordError && <p className={classes.error}>{passwordError}</p>}
 
             <button type="submit" className={classes.registerBtn}>
               S’inscrire
